@@ -1,0 +1,22 @@
+.ng-valid:not(form)  {
+    border: 1px solid #42A948; /* green */
+}
+
+.ng-invalid:not(form)  {
+    border: 1px solid #a94442; /* red */
+}
+#vol{
+    margin-left: 40%;
+}
+#ace{
+    margin-left: 0%;
+    margin-right: 39%;
+}
+#contenedor, #contenedor1{
+    margin-bottom: 1%;
+    margin-top: 1%;
+}
+#cli, #usu{
+    margin-left: 2%;
+    color:gray;
+}

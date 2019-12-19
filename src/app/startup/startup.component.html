@@ -1,0 +1,859 @@
+<!--Menu de navegacion de la startup-->
+
+<div *ngIf="nombreStartup!=='new' && desabilitar===false">
+    <nav class="navbar navbar-dark p-3 bg-dark text-white">
+        <div class="container">
+            <div class="navbar-brand">¡Actualiza Tus Datos!</div>
+            <ul class="nav justify-content-end">
+                <li class="nav-item">
+                    <a class="nav-link navbar-brand btn btn-dark" routerLink="../../principalStartup/startup">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link navbar-brand btn btn-dark" routerLink="../../infoEntidad/startup">Entidades</a>
+                </li>
+                <div class="btn-group" role="group">
+                    <button id="btnGroupDrop1" type="button" class="nav-link navbar-brand btn btn-dark dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Productos
+                    </button>
+                    <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
+                        <a class="dropdown-item text-dark" routerLink="../../infoProductos/startup">Productos Registrados</a>
+                        <a class="dropdown-item text-dark" (click)="editarInfoP()">Agregar Producto</a>
+                    </div>
+                </div>
+                <li class="nav-item">
+                    <a class="nav-link navbar-brand btn btn-dark" (click)="editarInfo()">Perfil</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link navbar-brand btn btn-dark" (click)="cerrarSesion()">Cerrar sesion</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+</div>
+
+<!--Menu de navegacion del admin-->
+<div *ngIf="desabilitar">
+    <nav class="navbar navbar-dark p-3 bg-dark text-white">
+        <div class="container">
+            <div class="navbar-brand">{{nombreStartup}}</div>
+            <ul class="nav justify-content-end">
+
+                <div class="btn-group" role="group">
+                    <button id="btnGroupDrop3" type="button" class="nav-link navbar-brand btn btn-dark dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Consultar
+                    </button>
+                    <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
+                        <a class="dropdown-item text-dark" routerLink="../../infoStartup/adm">Startups</a>
+                        <a class="dropdown-item text-dark" routerLink="../../infoEntidad/adm">Entidades</a>
+                        <a class="dropdown-item text-dark" routerLink="../../infoProductos/adm">Productos</a>
+                        <a class="dropdown-item text-dark" routerLink="../../infoConvocatorias/adm">Convocatorias</a>
+                    </div>
+                </div>
+
+                <div class="btn-group" role="group">
+                    <button id="btnGroupDrop2" type="button" class="nav-link navbar-brand btn btn-dark dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Administrador
+                    </button>
+                    <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
+                        <a class="dropdown-item text-dark" data-toggle="modal" id="agg" (click)="ventana()">Agregar</a>
+                        <a class="dropdown-item text-dark" data-toggle="modal" id="upd" (click)="ventana1()">Perfil</a>
+                    </div>
+                </div>
+
+                <li class="nav-item">
+                    <a class="nav-link navbar-brand btn btn-dark" (click)="cerrarSesion()">Cerrar sesion</a>
+                </li>
+
+            </ul>
+        </div>
+    </nav>
+</div>
+
+
+
+<div *ngIf="mostrar==false">
+
+    <!--Barra de progreso de la definicion startup-->
+    <div class="container" *ngIf="desabilitar===false">
+        <div class="justify-content-md-center">
+            <section>
+                <div class="container text-dark border border-info text-left col-md-11" style=" border-radius: 5px;">
+                    <div class="row" id="contenedor">
+                        <div class="col col-md-1 font-italic">
+                            <label><b>Progreso</b></label>
+                        </div>
+                        <div class="col pt-sm-2">
+                            <div class="progress text-center">
+                                <div id="progreso" class="progress-bar progress-bar-striped {{numeroLlenosLetra}} animacion" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <!--Indicador de pagina-->
+    <div class="container">
+        <div class="justify-content-md-center">
+            <section>
+                <div class="container text-dark border border-info text-right col-md-11" style=" border-radius: 5px; background-color: dodgerblue">
+                    <div class="row p-3"  style=" border-radius: 5px; color: black">
+                        <div class="col">
+                            <div *ngIf="colorMenu==false" class="text-center font-italic"><b>Definicion de la Startup</b></div>
+                            <div *ngIf="colorMenu==true" class="text-center font-italic" style=" border-radius: 5px; background-color: gray;"><b>Definicion de la Startup</b></div>
+                        </div>
+                        <div class="col">
+                            <div *ngIf="colorMenu==true" class="text-center font-italic"><b>Información del Negocio</b></div>
+                            <div *ngIf="colorMenu==false" class="text-center font-italic" style=" border-radius: 5px; background-color: gray;"><b>Información del Negocio</b></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <!--Formulario de la definicion startup-->
+    <div class="container">
+        <div class="justify-content-md-center">
+            <section>
+                <div class="container text-dark border border-info text-right col-md-11" style=" border-radius: 5px; background-color: #f7f7f7;" id="color1">
+                    <form name="formulario" [formGroup]="registerForm"><br/>
+
+                        <div class="row">
+                            <div class="col col-md-3">
+                                <label><b>Nombre de la Empresa:</b></label>
+                            </div>
+                            <div class="col" *ngIf="!desabilitar"><input formControlName="nombre" [(ngModel)]="startup.nombre" name="nombre" type="text" class="form-control form-control-sm" placeholder="Ingresa el nombre de la startup." (input)="animarA()"></div>
+                            <div class="col text-left" *ngIf="desabilitar">{{startup.nombre}}.</div>
+                        </div><div *ngIf="!desabilitar"><br/></div>
+
+                        <div class="row" *ngIf="!desabilitar">
+                            <div class="col col-md-3">
+                                <label><b>Contraseña:</b></label>
+                            </div>
+                            <div class="col">
+                                <input formControlName="contrasena" [(ngModel)]="startup.contrasena" name="contrasena" type="password" class="form-control form-control-sm" placeholder="Ingresa la contraseña de tu cuenta." (input)="animarB()">
+                                <div *ngIf="!contrasena.invalid==false && !contrasena.errors.required==true">Minimo seis caracteres</div>
+                            </div>
+                        </div><br/>
+
+                        <div class="row">
+                            <div class="col col-md-3">
+                                <label><b>Sector Economico de la Empresa:</b></label>
+                            </div>
+                            <div class="col pt-sm-2" *ngIf="!desabilitar">
+                                <select formControlName="sector" [(ngModel)]="startup.sector" name="sector" class="form-control form-control-sm" (ngModelChange)="animarC($event)">
+                                    <option>Agricultura</option>
+                                    <option>Comunicaciones</option>
+                                    <option>Consumo y publicidad</option>
+                                    <option>Entretenimiento</option>
+                                    <option>Servicios de software y TIC</option>
+                                    <option>Consumo y publicidad</option>
+                                    <option>Cuidado y salud</option>
+                                    <option>Desarrollo social y urbano</option>
+                                    <option>Educacion</option>
+                                    <option>Entretenimiento</option>
+                                    <option>Hoteleria y turismo</option>
+                                    <option>Financiero</option>
+                                    <option>Tecnologia</option>
+                                    <option>Farmaceutico</option>
+                                    <option>Gobierno y atencion al ciudadano</option>
+                                    <option>Medio Ambiente</option>
+                                    <option>Restaurante</option>
+                                    <option>Transporte y automotriz</option>
+                                    <option>Ciberseguridad</option>
+                                    <option>Otro</option>
+                                </select>
+                            </div>
+                            <div class="col text-left" *ngIf="desabilitar">{{startup.sector}}.</div>
+                        </div><br/>
+
+                        <div *ngIf="desabilitar"><div class="row">
+                            <div class="col col-md-3">
+                                <label class="text-center"><b>Servicios/Productos:</b></label>
+                            </div>
+                            <div class="col text-left">{{productosLabel}}</div>
+                        </div><br/></div>
+
+                        <div class="row">
+                            <div class="col col-md-3">
+                                <label><b>Numero de Empleados de Nomina:</b></label>
+                            </div>
+                            <div class="col pt-sm-2" *ngIf="!desabilitar">
+                                <input formControlName="nomina" [(ngModel)]="startup.nomina" name="nomina" type="text" class="form-control form-control-sm" placeholder="Ingresa el numero de empleados de nomina." (input)="animarF()">
+                                <div *ngIf="!nomina.invalid==false && !nomina.errors.required==true">Solo Numeros</div>
+                            </div>
+                            <div class="col pt-sm-2 text-left" *ngIf="desabilitar">{{startup.nomina}}</div>
+                        </div><br/>
+
+                        <div class="row">
+                            <div class="col col-md-3">
+                                <label><b>Numero de Empleados de Prestacion:</b></label>
+                            </div>
+                            <div class="col pt-sm-2" *ngIf="!desabilitar">
+                                <input formControlName="prestacion" [(ngModel)]="startup.prestacion" name="prestacion" type="text" class="form-control form-control-sm" placeholder="Ingresa el numero de empleados de prestacion." (input)="animarG()" >
+                                <div *ngIf="!prestacion.invalid==false && !prestacion.errors.required==true">Solo Numeros</div>
+                            </div>
+                            <div class="col pt-sm-2 text-left" *ngIf="desabilitar">{{startup.prestacion}}</div>
+                        </div><div *ngIf="!desabilitar"><br/></div>
+
+                        <div class="row">
+                            <div class="col col-md-3">
+                                <label class="text-center pt-sm-3"><b>Intensiones de crecimiento:</b></label>
+                            </div>
+                            <div class="col" *ngIf="!desabilitar">
+                                <div class="input-group">
+                                    <textarea formControlName="intension" [(ngModel)]="startup.intension" name="intension" type="text" class="form-control form-control-sm" placeholder="Intenciones de crecimiento de su empresa y como espera que la tecnologia lo apoye." (input)="animarE()"></textarea>
+                                </div>
+                            </div>
+                            <div class="col pt-sm-3 text-left" *ngIf="desabilitar">{{startup.intension}}</div>
+                        </div><div *ngIf="!desabilitar"><br/></div>
+
+                        <div class="row" *ngIf="!desabilitar">
+                            <div class="col col-md-3">
+                                <label><b>¿Ya se encuentra en el punto de equilibrio?</b></label>
+                            </div>
+                            <div class="col pt-sm-2">
+                                <select formControlName="puntoEquilibrio" [(ngModel)]="startup.puntoEquilibrio" (ngModelChange)="habilitarPuntoEquilibrio($event)" name="puntoEquilibrio" class="form-control form-control-sm align-items-md-center">
+                                    <option>No</option>
+                                    <option>Si</option>
+                                </select>
+                            </div>
+                            <div class="col pt-sm-2 text-left" *ngIf="desabilitar">{{startup.puntoEquilibrio}}</div>
+                        </div><br/>
+
+                        <div *ngIf="!desabilitar" class="text-center">
+                            <label><b>Si respondiste no a la pregunta anterior diligencia, ¿cual es su estrategia de negocio y cuanto tiempo se <br/> demorara en alcanzar el punto de equilibrio?</b></label><br/>
+                            <br/>
+                        </div>
+
+                        <div *ngIf="desabilitar" class="text-center">
+                            <label><b>Información si la empresa no esta en el punto de equilibrio</b></label><br/>
+                        </div>
+
+                        <div class="row">
+                            <div class="col col-md-3">
+                                <label class="text-center pt-sm-3"><b>Estrategia de cumplimiento:</b></label>
+                            </div>
+                            <div class="col" *ngIf="!desabilitar">
+                                <div class="input-group">
+                                    <textarea formControlName="estrategia" [disableControl]='!listo' [(ngModel)]="startup.estrategia" name="estrategia" type="text" class="form-control form-control-sm" placeholder="Describa brevemente la estrategia que posee en la empresa para alcanzar el punto de equilibrio." (input)="animarI()"></textarea>
+                                </div>
+                            </div>
+                            <div class="col pt-sm-3 text-left" *ngIf="desabilitar">{{startup.estrategia}}</div>
+                        </div><br/>
+
+                        <div class="row">
+                            <div class="col col-md-3">
+                                <label class="text-center"><b>Tiempo de meta:</b></label><br/>
+                            </div>
+                            <div class="col" *ngIf="!desabilitar">
+                                <input formControlName="tiempoMeta" [disableControl]='!listo' [(ngModel)]="startup.tiempoMeta" name="tiempoMeta" type="text" class="form-control form-control-sm" placeholder="Ingresa el tiempo de la meta" (input)="animarJ()">
+                            </div>
+                            <div class="col text-left" *ngIf="desabilitar">{{startup.tiempoMeta}}</div>
+                        </div><br/>
+
+                        <div class="row">
+                            <div class="col col-md-3">
+                                <label class="text-center"><b>Persona de contacto:</b></label>
+                            </div>
+                            <div class="col" *ngIf="!desabilitar">
+                                <input formControlName="personaContacto" [disableControl]='!listo' [(ngModel)]="startup.personaContacto" name="personaContacto" type="text" class="form-control form-control-sm" placeholder="Ingresa la persona de contacto" (input)="animarK()">
+                            </div>
+                            <div class="col text-left" *ngIf="desabilitar">{{startup.personaContacto}}</div>
+                        </div><br/>
+
+                        <div class="row">
+                            <div class="col col-md-3">
+                                <label class="text-center"><b>Correo de contacto:</b></label>
+                            </div>
+                            <div class="col" *ngIf="!desabilitar">
+                                <input formControlName="correoContacto" [disableControl]='!listo' [(ngModel)]="startup.correoContacto" name="correoContacto" type="email" class="form-control form-control-sm" placeholder="Ingresa el correo del contacto" (input)="animarL()">
+                            </div>
+                            <div class="col text-left" *ngIf="desabilitar">{{startup.correoContacto}}</div>
+                        </div><br/>
+
+                        <div class="row">
+                            <div class="col col-md-3">
+                                <label class="text-center"><b>Telefono de contacto:</b></label>
+                            </div>
+                            <div class="col" *ngIf="!desabilitar">
+                                <input formControlName="telefonoContacto" [disableControl]='!listo' [(ngModel)]="startup.telefonoContacto" name="telefonoContacto" type="text" class="form-control form-control-sm" placeholder="Ingresa el telefono del contacto" (input)="animarM()">
+                                <div *ngIf="!telefonoContacto.invalid==false && !telefonoContacto.errors.required==true">Solo Numeros</div>
+                            </div>
+                            <div class="col text-left" *ngIf="desabilitar">{{startup.telefonoContacto}}</div>
+                        </div><div *ngIf="!desabilitar"><br/><br/></div>
+
+                        <div class="row" *ngIf="!desabilitar">
+                            <div class="col col-md-8 text-center">
+                                <label><b>¿En tu equipo de trabajo cuentas con un perfil dedicado a identificar la oportunidad de negocio, el desarrollo del mismo y su escalabilidad?</b></label>
+                            </div>
+                            <div class="col pt-sm-2">
+                                <select formControlName="perfilIdentificador" [(ngModel)]="startup.perfilIdentificador" (ngModelChange)="habilitarPerfilIdentificador($event)" name="perfilIdentificador" class="form-control form-control-sm align-items-md-center">
+                                    <option>No</option>
+                                    <option>Si</option>
+                                </select>
+                            </div>
+                        </div><div *ngIf="!desabilitar"><br/></div>
+
+                        <div class="text-center" *ngIf="!desabilitar">
+                            <label><b>Si respondiste si a la pregunta anterior diligencia los siguientes datos de la persona encargada.</b></label>
+                        </div><br/>
+
+                        <div class="text-center" *ngIf="desabilitar">
+                            <label><b>Informacion si la empresa cuenta con un perfil dedicado a identificar la oportunidad de negocio.</b></label>
+                        </div><div *ngIf="desabilitar"><br/></div>
+
+                        <div class="row">
+                            <div class="col col-md-3">
+                                <label class="text-center"><b>Nombre del encargado:</b></label>
+                            </div>
+                            <div class="col" *ngIf="!desabilitar">
+                                <input formControlName="nombreEncargado" [(ngModel)]="startup.nombreEncargado" [disableControl]='!listoB' name="nombreEncargado" type="text" class="form-control form-control-sm" placeholder="Ingresa el nombre del encargado" (input)="animarO()">
+                            </div>
+                            <div class="col text-left" *ngIf="desabilitar">{{startup.nombreEncargado}}</div>
+                        </div><br/>
+
+                        <div class="row">
+                            <div class="col col-md-3">
+                                <label class="text-center"><b>Correo del encargado:</b></label><br/>
+                            </div>
+                            <div class="col" *ngIf="!desabilitar">
+                                <input formControlName="correoEncargado" [(ngModel)]="startup.correoEncargado" [disableControl]='!listoB' name="correoEncargado" type="text" class="form-control form-control-sm" placeholder="Ingresa el correo del encargado" (input)="animarP()">
+                            </div>
+                            <div class="col text-left" *ngIf="desabilitar">{{startup.correoEncargado}}</div>
+                        </div><br/>
+
+                        <div class="row">
+                            <div class="col col-md-3">
+                                <label class="text-center"><b>Telefono del encargado:</b></label>
+                            </div>
+                            <div class="col" *ngIf="!desabilitar">
+                                <input formControlName="telefonoEncargado" [(ngModel)]="startup.telefonoEncargado" [disableControl]='!listoB' name="telefonoEncargado" type="text" class="form-control form-control-sm" placeholder="Ingresa el telefono del encargado" (input)="animarQ()">
+                                <div *ngIf="!telefonoEncargado.invalid==false && !telefonoEncargado.errors.required==true">Solo Numeros</div>
+                            </div>
+                            <div class="col text-left" *ngIf="desabilitar">{{startup.telefonoEncargado}}</div>
+                        </div><br/>
+
+                        <div class="text-center">
+                            <button [disabled]="!registerForm.valid && !desabilitar" class="btn btn-success" type="submit" (click)="siguiente()">Siguiente</button>
+                        </div><br/><br/>
+                    </form>
+                </div>
+            </section>
+        </div>
+    </div>
+</div>
+
+<div *ngIf="mostrar==true">
+
+    <!--Barra de progreso de informacion de startup-->
+    <div class="container" *ngIf="desabilitar===false">
+        <div class="justify-content-md-center">
+            <section>
+                <div class="container text-dark border border-info text-left col-md-11" style=" border-radius: 5px;">
+                    <div class="row" id="contenedor1">
+                        <div class="col col-md-1 font-italic">
+                            <label><b>Progreso</b></label>
+                        </div>
+                        <div class="col pt-sm-2">
+                            <div class="progress text-center">
+                                <div id="progreso1" class="progress-bar progress-bar-striped {{numeroLlenosLetraInfo}} animacion" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <!--Indicador de pagina-->
+    <div class="container">
+        <div class="justify-content-md-center">
+            <section>
+                <div class="container text-dark border border-info text-right col-md-11" style=" border-radius: 5px; background-color: dodgerblue">
+                    <div class="row p-3"  style=" border-radius: 5px; color: black">
+                        <div class="col">
+                            <div *ngIf="colorMenu==false" class="text-center font-italic"><b>Definicion de la Startup</b></div>
+                            <div *ngIf="colorMenu==true" class="text-center font-italic" style=" border-radius: 5px; background-color: gray;"><b>Definicion de la Startup</b></div>
+                        </div>
+                        <div class="col">
+                            <div *ngIf="colorMenu==true" class="text-center font-italic"><b>Información del Negocio</b></div>
+                            <div *ngIf="colorMenu==false" class="text-center font-italic" style=" border-radius: 5px; background-color: gray;"><b>Información del Negocio</b></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <!--Formulario de la infroamcion de startup-->
+    <div class="container">
+        <div class="justify-content-md-center">
+            <section>
+                <div class="container text-dark border border-info col-md-11 text-right" style=" border-radius: 5px; background-color: #f7f7f7;" id="color2">
+                    <form name="formulario" [formGroup]="registerForm"><br/>
+
+                        <h5 class="text-left"><b>Modelo de Negocio</b></h5>
+                        <hr>
+
+                        <h5 id="cli" class="text-left"><b>Clientes</b></h5>
+                        <div class="container text-dark border border-info col-md-11" style=" border-radius: 5px; color: #d6d6d6"><br/>
+
+                            <div class="row">
+                                <div class="col col-md-3 pt-sm-3">
+                                    <label><b>Segmento del Mercado:</b></label>
+                                </div>
+                                <div class="col" *ngIf="!desabilitar">
+                                    <div class="input-group">
+                                        <textarea formControlName="segmentoCli" [(ngModel)]="startup.segmentoCli" name="segmentoCli" type="text" class="form-control form-control-sm" placeholder="Descripción del segmento del mercado de los clientes" (input)="animarDosA()"></textarea>
+                                    </div>
+                                </div>
+                                <div class="col pt-sm-3 text-left" *ngIf="desabilitar">{{startup.segmentoCli}}</div>
+                            </div><br/>
+
+                            <div class="row">
+                                <div class="col col-md-3 pt-sm-3">
+                                    <label><b>Propuesta de Valor:</b></label>
+                                </div>
+                                <div class="col" *ngIf="!desabilitar">
+                                    <div class="input-group">
+                                        <textarea formControlName="propuestaCli" [(ngModel)]="startup.propuestaCli" name="propuestaCli" type="text" class="form-control form-control-sm" placeholder="Descripción de la propuesta de valor de los clientes" (input)="animarDosB()"></textarea>
+                                    </div>
+                                </div>
+                                <div class="col pt-sm-3 text-left" *ngIf="desabilitar">{{startup.propuestaCli}}</div>
+                            </div><br/>
+
+                            <div class="row">
+                                <div class="col col-md-3 pt-sm-3">
+                                    <label><b>Canales de Informacion:</b></label>
+                                </div>
+                                <div class="col" *ngIf="!desabilitar">
+                                    <div class="input-group">
+                                        <textarea formControlName="canalesInfoCli" [(ngModel)]="startup.canalesInfoCli" name="canalesInfoCli" type="text" class="form-control form-control-sm" placeholder="Canales dedicados a informar sobre la propuesta de valor y los productos y servicios. ejemplo =  Página Oficial, Redes Sociales, Medios Tradicionales, entre otros." (input)="animarDosC()"></textarea>
+                                    </div>
+                                </div>
+                                <div class="col pt-sm-3 text-left" *ngIf="desabilitar">{{startup.canalesInfoCli}}</div>
+                            </div><br/>
+
+                            <div class="row">
+                                <div class="col col-md-3 pt-sm-3">
+                                    <label><b>Canales de Evaluacion:</b></label>
+                                </div>
+                                <div class="col" *ngIf="!desabilitar">
+                                    <div class="input-group">
+                                        <textarea formControlName="canalesEvaCli" [(ngModel)]="startup.canalesEvaCli" name="canalesEvaCli" type="text" class="form-control form-control-sm" placeholder="Canales dedicados a evaluar la propuesta de valor y los productos y servicios, son canales de PQRD." (input)="animarDosD()"></textarea>
+                                    </div>
+                                </div>
+                                <div class="col pt-sm-3 text-left" *ngIf="desabilitar">{{startup.canalesEvaCli}}</div>
+                            </div><br/>
+
+                            <div class="row">
+                                <div class="col col-md-3 pt-sm-3">
+                                    <label><b>Canales de Venta:</b></label>
+                                </div>
+                                <div class="col" *ngIf="!desabilitar">
+                                    <div class="input-group">
+                                        <textarea formControlName="canalesVentaCli" [(ngModel)]="startup.canalesVentaCli" name="canalesVentaCli" type="text" class="form-control form-control-sm" placeholder="Canales dedicados a vender los productos y servicios, ejemplo = Plataforma E-Commerce, Local comercial, Telefónico, entre otros." (input)="animarDosE()"></textarea>
+                                    </div>
+                                </div>
+                                <div class="col pt-sm-3 text-left" *ngIf="desabilitar">{{startup.canalesVentaCli}}</div>
+                            </div><br/>
+
+                            <div class="row">
+                                <div class="col col-md-3 pt-sm-3">
+                                    <label><b>Canales de Entrega:</b></label>
+                                </div>
+                                <div class="col" *ngIf="!desabilitar">
+                                    <div class="input-group">
+                                        <textarea formControlName="canalesEntregaCli" [(ngModel)]="startup.canalesEntregaCli" name="canalesEntregaCli" type="text" class="form-control form-control-sm" placeholder="Canales para garantizar la entrega del  productos y servicios que ofrece el negocio. ejemplo =  Paquetes y Encomiendas, Establecimientos de autoservicios, Domicilios, Entre otros." (input)="animarDosF()"></textarea>
+                                    </div>
+                                </div>
+                                <div class="col pt-sm-3 text-left" *ngIf="desabilitar">{{startup.canalesEntregaCli}}</div>
+                            </div><br/>
+
+                            <div class="row">
+                                <div class="col col-md-3  pt-sm-3">
+                                    <label><b>Canales Pos-Venta:</b></label>
+                                </div>
+                                <div class="col" *ngIf="!desabilitar">
+                                    <div class="input-group">
+                                        <textarea formControlName="canalesPosVentaCli" [(ngModel)]="startup.canalesPosVentaCli" name="canalesPosVentaCli" type="text" class="form-control form-control-sm" placeholder="Canales dedicados a establecer relaciones de acompañamiento con el cliente." (input)="animarDosG()"></textarea>
+                                    </div>
+                                </div>
+                                <div class="col pt-sm-3 text-left" *ngIf="desabilitar">{{startup.canalesPosVentaCli}}</div>
+                            </div><br/>
+
+                            <div class="text-center">
+                                <label><b>Relacionamiento</b></label>
+                            </div>
+
+                            <div class="text-center" *ngIf="!desabilitar">
+                                <label>Selecciona los tipos de interacción que les correspondan.</label>
+                            </div>
+
+                            <div class="text-center" *ngIf="desabilitar && mensajeRelacionamiento">
+                                <label>No hay relacionamiento en la startup.</label>
+                            </div>
+
+                            <div class="row text-center">
+                                <div class="col custom-checkbox" *ngIf="!desabilitar">
+                                    <label><input formControlName="personalCli" [(ngModel)]="startup.personalCli" name="personalCli" type="checkbox"> Personal</label>
+                                </div>
+                                <div class="col pt-sm-3 text-left text-center" *ngIf="desabilitar && a === true">Personal</div>
+                                <div class="col custom-checkbox" *ngIf="!desabilitar">
+                                    <label><input formControlName="autoservicioCli" [(ngModel)]="startup.autoservicioCli" name="autoservicioCli" type="checkbox"> Autoservicio </label>
+                                </div>
+                                <div class="col pt-sm-3 text-left text-center" *ngIf="desabilitar && b === true">Autoservicio</div>
+                                <div class="col custom-checkbox" *ngIf="!desabilitar">
+                                    <label><input formControlName="automatizadoCli" [(ngModel)]="startup.automatizadoCli" name="automatizadoCli" type="checkbox"> Automatizado</label>
+                                </div>
+                                <div class="col pt-sm-3 text-left text-center" *ngIf="desabilitar && c === true">Automatizado</div>
+                                <div class="col custom-checkbox" *ngIf="!desabilitar">
+                                    <label><input formControlName="comunidadesCli" [(ngModel)]="startup.comunidadesCli" name="comunidadesCli" type="checkbox"> Comunidades</label>
+                                </div>
+                                <div class="col pt-sm-3 text-left text-center" *ngIf="desabilitar && d === true">Comunidades</div>
+                                <div class="col custom-checkbox" *ngIf="!desabilitar">
+                                    <label><input formControlName="personalDedicadoCli" [(ngModel)]="startup.personalDedicadoCli" name="personalDedicadoCli" type="checkbox"> Personal Dedicado</label>
+                                </div>
+                                <div class="col pt-sm-3 text-left text-center" *ngIf="desabilitar && e === true">Personal Dedicado</div>
+                            </div><br/>
+                        </div><br/>
+
+                        <h5 id="usu" class="text-left"><b>Usuarios</b></h5>
+                        <div class="container text-dark border border-info col-md-11 text-right" style=" border-radius: 5px; color: #d6d6d6"><br/>
+
+                            <div class="row">
+                                <div class="col col-md-3  pt-sm-3">
+                                    <label><b>Segmento del Mercado:</b></label>
+                                </div>
+                                <div class="col" *ngIf="!desabilitar">
+                                    <div class="input-group">
+                                        <textarea formControlName="segmentoUsu" [(ngModel)]="startup.segmentoUsu" name="segmentoUsu" type="text" class="form-control form-control-sm" placeholder="Descripción del segmento del mercado de los usuarios" (input)="animarDosH()"></textarea>
+                                    </div>
+                                </div>
+                                <div class="col pt-sm-3 text-left" *ngIf="desabilitar">{{startup.segmentoUsu}}</div>
+                            </div><br/>
+
+                            <div class="row">
+                                <div class="col col-md-3  pt-sm-3">
+                                    <label><b>Propuesta de Valor:</b></label>
+                                </div>
+                                <div class="col" *ngIf="!desabilitar">
+                                    <div class="input-group">
+                                        <textarea formControlName="propuestaUsu" [(ngModel)]="startup.propuestaUsu" name="propuestaUsu" type="text" class="form-control form-control-sm" placeholder="Descripción de la propuesta de valor de los usuarios" (input)="animarDosI()"></textarea>
+                                    </div>
+                                </div>
+                                <div class="col pt-sm-3 text-left" *ngIf="desabilitar">{{startup.propuestaUsu}}</div>
+                            </div><br/>
+
+                            <div class="row">
+                                <div class="col col-md-3  pt-sm-3">
+                                    <label><b>Canales de Informacion:</b></label>
+                                </div>
+                                <div class="col" *ngIf="!desabilitar">
+                                    <div class="input-group">
+                                        <textarea formControlName="canalesInfoUsu" [(ngModel)]="startup.canalesInfoUsu" name="canalesInfoUsu" type="text" class="form-control form-control-sm" placeholder="Canales dedicados a informar sobre la propuesta de valor y los productos y servicios. ejemplo =  Página Oficial, Redes Sociales, Medios Tradicionales, entre otros." (input)="animarDosJ()"></textarea>
+                                    </div>
+                                </div>
+                                <div class="col pt-sm-3 text-left" *ngIf="desabilitar">{{startup.canalesInfoUsu}}</div>
+                            </div><br/>
+
+                            <div class="row">
+                                <div class="col col-md-3  pt-sm-3">
+                                    <label><b>Canales de Evaluacion:</b></label>
+                                </div>
+                                <div class="col" *ngIf="!desabilitar">
+                                    <div class="input-group">
+                                        <textarea formControlName="canalesEvaUsu" [(ngModel)]="startup.canalesEvaUsu" name="canalesEvaUsu" type="text" class="form-control form-control-sm" placeholder="Canales dedicados a evaluar la propuesta de valor y los productos y servicios, son canales de PQRD." (input)="animarDosK()"></textarea>
+                                    </div>
+                                </div>
+                                <div class="col pt-sm-3 text-left" *ngIf="desabilitar">{{startup.canalesEvaUsu}}</div>
+                            </div><br/>
+
+                            <div class="row">
+                                <div class="col col-md-3  pt-sm-3">
+                                    <label><b>Canales de Venta:</b></label>
+                                </div>
+                                <div class="col" *ngIf="!desabilitar">
+                                    <div class="input-group">
+                                        <textarea formControlName="canalesVentaUsu" [(ngModel)]="startup.canalesVentaUsu" name="canalesVentaUsu" type="text" class="form-control form-control-sm" placeholder="Canales dedicados a vender los productos y servicios, ejemplo = Plataforma E-Commerce, Local comercial, Telefónico, entre otros." (input)="animarDosL()"></textarea>
+                                    </div>
+                                </div>
+                                <div class="col pt-sm-3 text-left" *ngIf="desabilitar">{{startup.canalesVentaUsu}}</div>
+                            </div><br/>
+
+                            <div class="row">
+                                <div class="col col-md-3  pt-sm-3">
+                                    <label><b>Canales de Entrega:</b></label>
+                                </div>
+                                <div class="col" *ngIf="!desabilitar">
+                                    <div class="input-group">
+                                        <textarea formControlName="canalesEntregaUsu" [(ngModel)]="startup.canalesEntregaUsu" name="canalesEntregaUsu" type="text" class="form-control form-control-sm" placeholder="Canales para garantizar la entrega del  productos y servicios que ofrece el negocio. ejemplo =  Paquetes y Encomiendas, Establecimientos de autoservicios, Domicilios, Entre otros." (input)="animarDosM()"></textarea>
+                                    </div>
+                                </div>
+                                <div class="col pt-sm-3 text-left" *ngIf="desabilitar">{{startup.canalesEntregaUsu}}</div>
+                            </div><br/>
+
+                            <div class="row">
+                                <div class="col col-md-3  pt-sm-3">
+                                    <label><b>Canales Pos-Venta:</b></label>
+                                </div>
+                                <div class="col" *ngIf="!desabilitar">
+                                    <div class="input-group">
+                                        <textarea formControlName="canalesPosVentaUsu" [(ngModel)]="startup.canalesPosVentaUsu" name="canalesPosVentaUsu" type="text" class="form-control form-control-sm" placeholder="Canales dedicados a establecer relaciones de acompañamiento con el cliente." (input)="animarDosN()"></textarea>
+                                    </div>
+                                </div>
+                                <div class="col pt-sm-3 text-left" *ngIf="desabilitar">{{startup.canalesPosVentaUsu}}</div>
+                            </div><br/>
+
+                            <div class="text-center">
+                                <label><b>Relacionamiento</b></label>
+                            </div>
+
+                            <div class="text-center" *ngIf="!desabilitar">
+                                <label>Selecciona los tipos de interacción que les correspondan.</label>
+                            </div>
+
+                            <div class="text-center" *ngIf="desabilitar && mensajeRelacionamientoUsu">
+                                <label>No hay relacionamiento en la startup.</label>
+                            </div>
+
+                            <div class="row text-center">
+                                <div class="col custom-checkbox" *ngIf="!desabilitar">
+                                    <label><input formControlName="personalUsu" [(ngModel)]="startup.personalUsu" name="personalUsu" type="checkbox"> Personal</label>
+                                </div>
+                                <div class="col pt-sm-3 text-left text-center" *ngIf="desabilitar && f === true">Personal</div>
+                                <div class="col custom-checkbox" *ngIf="!desabilitar">
+                                    <label><input formControlName="autoservicioUsu" [(ngModel)]="startup.autoservicioUsu" name="autoservicioUsu" type="checkbox"> Autoservicio </label>
+                                </div>
+                                <div class="col pt-sm-3 text-left text-center" *ngIf="desabilitar && g === true">Autoservicio</div>
+                                <div class="col custom-checkbox" *ngIf="!desabilitar">
+                                    <label><input formControlName="automatizadoUsu" [(ngModel)]="startup.automatizadoUsu" name="automatizadoUsu" type="checkbox"> Automatizado</label>
+                                </div>
+                                <div class="col pt-sm-3 text-left text-center" *ngIf="desabilitar && h === true">Automatizado</div>
+                                <div class="col custom-checkbox" *ngIf="!desabilitar">
+                                    <label><input formControlName="comunidadesUsu" [(ngModel)]="startup.comunidadesUsu" name="comunidadesUsu" type="checkbox"> Comunidades</label>
+                                </div>
+                                <div class="col pt-sm-3 text-left text-center" *ngIf="desabilitar && i === true">Comunidades</div>
+                                <div class="col custom-checkbox" *ngIf="!desabilitar">
+                                    <label><input formControlName="personalDedicadoUsu" [(ngModel)]="startup.personalDedicadoUsu" name="personalDedicadoUsu" type="checkbox"> Personal Dedicado</label>
+                                </div>
+                                <div class="col pt-sm-3 text-left text-center" *ngIf="desabilitar && j === true">Personal Dedicado</div>
+                            </div><br/>
+                        </div><br/>
+
+                        <h5 class="text-left"><b>Proceso de Negocio</b></h5>
+                        <hr>
+
+                        <div class="container text-dark border border-info col-md-11 text-right" style=" border-radius: 5px; background-color: #f7f7f7;"><br/>
+
+                            <div class="row">
+                                <div class="col col-md-3">
+                                    <label><b>Nombre del proceso de negocio que impacta la empresa:</b></label>
+                                </div>
+                                <div class="col" *ngIf="!desabilitar">
+                                    <div class="input-group">
+                                        <textarea formControlName="nombreProceso" [(ngModel)]="startup.nombreProceso" name="nombreProceso" type="text" class="form-control form-control-sm" placeholder="Nombre del proceso de negocio." (input)="animarDosO()"></textarea>
+                                    </div>
+                                </div>
+                                <div class="col pt-sm-3 text-left" *ngIf="desabilitar">{{startup.nombreProceso}}</div>
+                            </div><hr>
+
+                            <div class="text-center">
+                                <label><b>Meta del proceso de negocio (Debe redactarse en forma de sustantivo y adjetivo)</b></label>
+                            </div><br/>
+
+                            <div class="row">
+                                <div class="col col-md-3 pt-sm-3">
+                                    <label><b>Perspectiva del Usuario:</b></label>
+                                </div>
+                                <div class="col" *ngIf="!desabilitar">
+                                    <div class="input-group">
+                                        <textarea formControlName="perspectivaUsuario" [(ngModel)]="startup.perspectivaUsuario" name="perspectivaUsuario" type="text" class="form-control form-control-sm" placeholder="Esta meta describe el interés del usuario. ejemplo = libro recibido, paquete enviado, etc." (input)="animarDosP()"></textarea>
+                                    </div>
+                                </div>
+                                <div class="col pt-sm-3 text-left" *ngIf="desabilitar">{{startup.perspectivaUsuario}}</div>
+                            </div><br/>
+
+                            <div class="row">
+                                <div class="col col-md-3 pt-sm-3">
+                                    <label><b>Perspectiva de la Empresa:</b></label>
+                                </div>
+                                <div class="col" *ngIf="!desabilitar">
+                                    <div class="input-group">
+                                        <textarea formControlName="perspectivaEmpresa" [(ngModel)]="startup.perspectivaEmpresa" name="perspectivaEmpresa" type="text" class="form-control form-control-sm" placeholder="Esta meta describe el interés de la empresa. ejemplo = libro cancelado, paquete pagado, etc." (input)="animarDosQ()"></textarea>
+                                    </div>
+                                </div>
+                                <div class="col pt-sm-3 text-left" *ngIf="desabilitar">{{startup.perspectivaEmpresa}}</div>
+                            </div><hr><br/>
+
+                            <div class="row">
+                                <div class="col col-md-3 pt-sm-3">
+                                    <label><b>Objetivo del proceso de negocio:</b></label>
+                                </div>
+                                <div class="col" *ngIf="!desabilitar">
+                                    <div class="input-group">
+                                        <textarea formControlName="objetivoProceso" [(ngModel)]="startup.objetivoProceso" name="objetivoProceso" type="text" class="form-control form-control-sm" placeholder="Descripción del objetivo del proceso desde la perspectiva de la empresa." (input)="animarDosR()"></textarea>
+                                    </div>
+                                </div>
+                                <div class="col pt-sm-3 text-left" *ngIf="desabilitar">{{startup.objetivoProceso}}</div>
+                            </div><br/>
+
+                            <div class="row">
+                                <div class="col col-md-3 pt-sm-3">
+                                    <label><b>Descripcion del proceso:</b></label>
+                                </div>
+                                <div class="col" *ngIf="!desabilitar">
+                                    <div class="input-group">
+                                        <textarea formControlName="descripcionProceso" [(ngModel)]="startup.descripcionProceso" name="descripcionProceso" type="text" class="form-control form-control-sm" placeholder="Descripción general del proceso." (input)="animarDosS()"></textarea>
+                                    </div>
+                                </div>
+                                <div class="col pt-sm-3 text-left" *ngIf="desabilitar">{{startup.descripcionProceso}}</div>
+                            </div><br/>
+                        </div><br/>
+
+                        <div class="row">
+                            <div class="col" id="vol">
+                                <button class="btn btn-primary" (click)="volver()">Volver</button>
+                            </div>
+                            <div class="col" id="ace">
+                                <button [disabled]="!registerForm.valid || desabilitar" class="btn btn-success" type="submit" (click)="aceptar()">Aceptar</button>
+                            </div>
+                        </div><br/><br/>
+                    </form>
+                </div>
+            </section>
+        </div>
+    </div>
+</div>
+
+<!--Formulario de la relacion entre startup y convocatoria-->
+<form [formGroup]="aplicarForm" *ngIf="false">
+    <input formControlName="convocatoriaApli" [(ngModel)]="convocatoria_startup.convocatoriaApli" type="text">
+    <input formControlName="startupApli" [(ngModel)]="convocatoria_startup.startupApli" type="text">
+    <input formControlName="aplico" [(ngModel)]="convocatoria_startup.aplico" type="text">
+    <input formControlName="porcentaje" [(ngModel)]="convocatoria_startup.porcentaje" type="text">
+</form>
+
+
+
+<!--Boton para llamar a la ventana emergente-->
+<div class="text-center" *ngIf="!desabilitar && verBotonEliminar">
+    <br/>
+    <a class="btn btn-danger text-white" data-toggle="modal" id="boton" (click)="llamarVentana()">Eliminar Cuenta</a>
+    <br/>
+    <br/>
+    <!--Ventana emergente para eliminar la cuenta-->
+    <div class="modal fade" tabindex="-1" role="dialog" id="ventanaElim">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title"><b>¿Seguro que deseas eliminar tu cuenta?</b></h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+
+                    <div class="row">
+                        <div class="col col-md-3">
+                            <label>Contraseña:</label>
+                        </div>
+                        <div class="col">
+                            <input type="password" id="contra" name="contra" class="form-control form-control-sm" placeholder="Ingresa la contraseña para eliminar tu cuenta.">
+                        </div>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" data-dismiss="modal" (click)="eliminarStartup()">Aceptar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div *ngIf="desabilitar">
+    <!--Ventana emergente para crear o actualizar un admin-->
+    <div class="modal fade" tabindex="-1" role="dialog" id="ventana1">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" *ngIf="tipoPeticion === true"><b>Nuevo administrador</b></h5>
+                    <h5 class="modal-title" *ngIf="tipoPeticion === false"><b>Actualiza tus datos</b></h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form name="formulario" [formGroup]="admForm"><br/>
+
+                        <div class="row">
+                            <div class="col col-md-2">
+                                <label>Correo:</label>
+                            </div>
+                            <div class="col">
+                                <input type="email" formControlName="cor" [(ngModel)]="adm.cor" class="form-control form-control-sm" placeholder="Ingresa el correo del administrador (ejemplo@gmail.com).">
+                            </div>
+                        </div><br/>
+                        <div class="row">
+                            <div class="col col-md-3">
+                                <label>Contraseña:</label>
+                            </div>
+                            <div class="col col-md-8">
+                                <input type="text" formControlName="con" [(ngModel)]="adm.con" name="contra" class="form-control form-control-sm" placeholder="Ingresa la contraseña del administrador.">
+                            </div>
+                        </div>
+
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-danger" data-toggle="modal" data-dismiss="modal" href="#ventanaElimAdm" *ngIf="!tipoPeticion">Eliminar</button>
+                    <button type="button" class="btn btn-primary" (click)="guardarAdm()" [disabled]="!admForm.valid">Guardar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--Ventana emergente para eliminar un admin-->
+    <div class="modal fade" tabindex="-1" role="dialog" id="ventanaElimAdm">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title"><b>¿Seguro deseas eliminar tu cuenta?</b></h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+
+                    <div class="row">
+                        <div class="col col-md-3">
+                            <label>Contraseña:</label>
+                        </div>
+                        <div class="col col-md-8">
+                            <input type="text" id="contraAdm" name="contra" class="form-control form-control-sm" placeholder="Ingresa la contraseña para eliminar tu cuenta.">
+                        </div>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" data-dismiss="modal" (click)="eliminarAdm()" [disabled]="!admForm.valid">Aceptar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="my-container">
+    <ng-template #customLoadingTemplate>
+    </ng-template>
+    <ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '3px' }" [template]="customLoadingTemplate"></ngx-loading>
+</div>

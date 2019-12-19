@@ -1,0 +1,325 @@
+<!--Menu de navegacion de la startup-->
+<div *ngIf="desabilitar === false">
+  <nav class="navbar navbar-dark p-3 bg-dark text-dark">
+    <div class="container">
+      <div class="navbar-brand" *ngIf="nombreProducto === 'new'">¡Registra Tu Producto!</div>
+      <div class="navbar-brand" *ngIf="nombreProducto !== 'new'">¡Actualiza los datos!</div>
+      <ul class="nav justify-content-end">
+        <li class="nav-item">
+          <a class="nav-link navbar-brand btn btn-dark text-white" routerLink="../../principalStartup/startup">Home</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link navbar-brand btn btn-dark text-white" routerLink="../../infoEntidad/startup">Entidades</a>
+        </li>
+        <div class="btn-group" role="group">
+          <button type="button" class="nav-link navbar-brand btn btn-dark dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Productos
+          </button>
+          <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
+            <a class="dropdown-item text-dark" routerLink="../../infoProductos/startup">Productos Registrados</a>
+            <a class="dropdown-item text-dark" (click)="editarInfoP()">Agregar Producto</a>
+          </div>
+        </div>
+        <li class="nav-item">
+          <a class="nav-link navbar-brand btn btn-dark text-white" (click)="editarInfo()">Perfil</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link navbar-brand btn btn-dark text-white" (click)="cerrarSesion()">Cerrar sesion</a>
+        </li>
+      </ul>
+    </div>
+  </nav>
+</div>
+
+<div *ngIf="desabilitar">
+  <!--Menu de navegacion del admin-->
+  <nav class="navbar navbar-dark p-3 bg-dark text-white">
+    <div class="container">
+      <div class="navbar-brand">{{nombreProducto}}</div>
+      <ul class="nav justify-content-end">
+
+        <div class="btn-group" role="group">
+          <button id="btnGroupDrop3" type="button" class="nav-link navbar-brand btn btn-dark dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Consultar
+          </button>
+          <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
+            <a class="dropdown-item text-dark" routerLink="../../infoStartup/adm">Startups</a>
+            <a class="dropdown-item text-dark" routerLink="../../infoEntidad/adm">Entidades</a>
+            <a class="dropdown-item text-dark" routerLink="../../infoProductos/adm">Productos</a>
+            <a class="dropdown-item text-dark" routerLink="../../infoConvocatorias/adm">Convocatorias</a>
+          </div>
+        </div>
+
+        <div class="btn-group" role="group">
+          <button id="btnGroupDrop2" type="button" class="nav-link navbar-brand btn btn-dark dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Administrador
+          </button>
+          <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
+            <a class="dropdown-item text-dark" data-toggle="modal" id="agg" (click)="ventana()">Agregar</a>
+            <a class="dropdown-item text-dark" data-toggle="modal" id="upd" (click)="ventana1()">Perfil</a>
+          </div>
+        </div>
+
+        <li class="nav-item">
+          <a class="nav-link navbar-brand btn btn-dark" (click)="cerrarSesion()">Cerrar sesion</a>
+        </li>
+
+      </ul>
+    </div>
+  </nav>
+</div>
+
+
+<!--Barra de progreso del producto-->
+<div class="container" *ngIf="desabilitar === false">
+  <div class="justify-content-md-center">
+    <section>
+      <div class="container text-left bg-light text-dark border border-info col-md-11" style=" border-radius: 5px; background-color: #f7f7f7;">
+        <div class="row" id="contenedor">
+          <div class="col col-md-1 font-italic">
+            <label><b>Progreso</b></label>
+          </div>
+          <div class="col pt-sm-2">
+            <div class="progress text-center">
+              <div id="progresoProd" class="progress-bar progress-bar-striped {{numeroLlenosLetraProd}} animacion" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+</div>
+<!--Formulario del producto-->
+<div class="container">
+  <div class="justify-content-md-center">
+    <section>
+      <div class="container text-right bg-light text-dark border border-info col-md-11" style=" border-radius: 5px;">
+        <form name="formulario" [formGroup]="registerForm"><br/>
+
+          <h5 class="text-left" style="color: mediumblue"><b>Plataforma</b></h5>
+          <hr>
+
+          <div class="row">
+            <div class="col col-md-3">
+              <label><b>Nombre:</b></label>
+            </div>
+            <div class="col" *ngIf="!desabilitar">
+              <input formControlName="nombre" [(ngModel)]="producto.nombre" name="nombre" type="text" class="form-control form-control-sm" placeholder="Ingresa el nombre del producto." (input)="animarProdA()">
+            </div>
+            <div class="col text-left" *ngIf="desabilitar">{{producto.nombre}}</div>
+          </div><br/>
+
+          <div class="row">
+            <div class="col col-md-3">
+              <label><b>Tipo de Plataforma:</b></label>
+            </div>
+            <div class="col" *ngIf="!desabilitar">
+              <select formControlName="tipoPlataforma" [(ngModel)]="producto.tipoPlataforma" name="tipoPlataforma" class="form-control form-control-sm" (ngModelChange)="animarProdB($event)">
+                <option>Celular</option>
+                <option>PC</option>
+                <option>Tablet</option>
+              </select>
+            </div>
+            <div class="col text-left" *ngIf="desabilitar">{{producto.tipoPlataforma}}</div>
+          </div><br/>
+
+          <div class="row">
+            <div class="col col-md-3">
+              <label><b>Tipo de Solución:</b></label>
+            </div>
+            <div class="col" *ngIf="!desabilitar">
+              <select formControlName="tipoSolucion" [(ngModel)]="producto.tipoSolucion" name="tipoSolucion" class="form-control form-control-sm" (ngModelChange)="animarProdC($event)">
+                <option>App Movil</option>
+                <option>App Web</option>
+              </select>
+            </div>
+            <div class="col text-left" *ngIf="desabilitar">{{producto.tipoSolucion}}</div>
+          </div><br/>
+
+          <div class="row">
+            <div class="col col-md-3">
+              <label><b>Dirección Web:</b></label>
+            </div>
+            <div class="col" *ngIf="!desabilitar">
+              <input formControlName="direccionWeb" [(ngModel)]="producto.direccionWeb" name="direccionWeb" type="text" class="form-control form-control-sm" placeholder="Ingresa la dirección web de tu producto." (input)="animarProdD()">
+            </div>
+            <div class="col text-left" *ngIf="desabilitar">{{producto.direccionWeb}}</div>
+          </div><br/>
+
+          <div class="row">
+            <div class="col col-md-3 pt-sm-2">
+              <label><b>Objetivo del sitio para el negocio:</b></label>
+            </div>
+            <div class="col" *ngIf="!desabilitar">
+              <div class="input-group">
+                <textarea formControlName="objetivo" [(ngModel)]="producto.objetivo" name="objetivo" type="text" class="form-control form-control-sm" placeholder="Definir el/los objetivo(s) de la plataforma para el negocio, consiste en determinar en que apoya la plataforma a las metas y propositos del negocio." (input)="animarProdE()"></textarea>
+              </div><br/>
+            </div>
+            <div class="col text-left pt-sm-3" *ngIf="desabilitar">{{producto.objetivo}}</div>
+          </div><div *ngIf="desabilitar"><br/></div>
+
+          <div class="row">
+            <div class="col col-md-3">
+              <label><b>Dirección App Store:</b></label>
+            </div>
+            <div class="col" *ngIf="!desabilitar">
+              <input formControlName="direccionApp" [(ngModel)]="producto.direccionApp" name="direccionApp" type="text" class="form-control form-control-sm" placeholder="Ingresa la dirección de la app store de tu producto." (input)="animarProdF()">
+            </div>
+            <div class="col text-left" *ngIf="desabilitar">{{producto.direccionApp}}</div>
+          </div><br/>
+
+          <div class="row">
+            <div class="col col-md-3">
+              <label><b>Dirección Play Store:</b></label>
+            </div>
+            <div class="col" *ngIf="!desabilitar">
+              <input formControlName="direccionPlay" [(ngModel)]="producto.direccionPlay" name="direccionPlay" type="text" class="form-control form-control-sm" placeholder="Ingresa la dirección de la play store de tu producto." (input)="animarProdG()">
+            </div>
+            <div class="col text-left" *ngIf="desabilitar">{{producto.direccionPlay}}</div>
+          </div><br/><hr><br/>
+
+          <h5 class="text-left" style="color: mediumblue"><b>Información de Contexto</b></h5>
+          <hr>
+
+          <div class="row" *ngIf="!desabilitar">
+            <div class="col col-md-7 text-center">
+              <label><b>¿Has recibido anteriormente asesoria de desarrollo de negocio, validacion de negocio o investigación de mercados?</b></label><br/>
+            </div>
+            <div class="col pt-sm-2" >
+              <select formControlName="asesoriasValidacion" (ngModelChange)="habilitarInformacionContexto($event)" [(ngModel)]="producto.asesoriasValidacion" name="asesoriasValidacion" class="form-control form-control-sm">
+                <option>No</option>
+                <option>Si</option>
+              </select>
+            </div>
+          </div><br/>
+
+          <div class="text-center" *ngIf="desabilitar"><b>Areas en que la startup ha recibido asesoria de desarrollo de negocio, validacion de negocio o investigación de mercados</b></div>
+
+          <div class="text-center" *ngIf="!desabilitar">
+            <label><b>En caso de responder si en la pregunta anterior, <br/> selecciona las área(s) de usablidad y experiencia de usuario en las que tuviste asesoria</b></label><br/>
+          </div><br/>
+
+          <div class="text-center" *ngIf="desabilitar && !habilitar && mensajeAsesoria">
+            <label>No se ha recibido asesoria.</label>
+          </div>
+
+          <div class="row text-center">
+            <div class="col custom-checkbox" *ngIf="!desabilitar">
+              <label><input formControlName="desarrolloNegocio" [disableControl]="!habilitar" [(ngModel)]="producto.desarrolloNegocio" name="desarrolloNegocio" type="checkbox" (change)="eventoCheck()"> Desarrollo y Validación de Negocio.</label>
+            </div>
+            <div class="col pt-sm-3 text-left text-center" *ngIf="desabilitar && !habilitar && a === true">Desarrollo y Validación de Negocio.</div>
+            <div class="col custom-checkbox" *ngIf="!desabilitar">
+              <label><input formControlName="investigacionMercado" [disableControl]="!habilitar" [(ngModel)]="producto.investigacionMercado" name="investigacionMercado" type="checkbox" (change)="eventoCheck()"> Investigación de Mercados.</label>
+            </div>
+            <div class="col pt-sm-3 text-left text-center" *ngIf="desabilitar && !habilitar && b === true">Investigación de Mercados.</div>
+            <div class="col custom-checkbox" *ngIf="!desabilitar">
+              <label><input formControlName="arquitecturaEmpresarial" [disableControl]="!habilitar" [(ngModel)]="producto.arquitecturaEmpresarial" name="arquitecturaEmpresarial" type="checkbox" (change)="eventoCheck()"> Arquitectura Empresarial.</label>
+            </div>
+            <div class="col pt-sm-3 text-left text-center" *ngIf="desabilitar && !habilitar && c === true">Arquitectura Empresarial.</div>
+            <div class="col custom-checkbox" *ngIf="!desabilitar">
+              <label><input formControlName="desarrolloPlan" [disableControl]="!habilitar" [(ngModel)]="producto.desarrolloPlan" name="desarrolloPlan" type="checkbox" (change)="eventoCheck()"> Desarrollo de Planes de Negocios.</label>
+            </div>
+            <div class="col pt-sm-3 text-left text-center" *ngIf="desabilitar && d === true">Desarrollo de Planes de Negocios.</div>
+          </div><br/><hr><br/>
+
+          <div class="row" *ngIf="desabilitar">
+            <div class="col col-md-2">
+              <label class="text-left"><b>Pertenece a:</b></label>
+            </div>
+            <div class="col" *ngIf="false">
+              <input formControlName="startupProd" class="form-control form-control-sm" [(ngModel)]="producto.startupProd" type="text">
+            </div>
+            <div class="col text-left">{{producto.startupProd}}</div>
+          </div><br/>
+
+          <div class="col text-center">
+            <button [disabled]="!registerForm.valid || desabilitar" class="btn btn-success" (click)="aceptar()" type="submit">Aceptar</button>
+          </div><br/><br/>
+
+        </form>
+      </div>
+    </section>
+  </div>
+</div>
+
+
+
+<div *ngIf="desabilitar">
+  <!--Ventana emergente para crear o actualizar un admin-->
+  <div class="modal fade" tabindex="-1" role="dialog" id="ventana1">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" *ngIf="tipoPeticion === true"><b>Nuevo administrador</b></h5>
+          <h5 class="modal-title" *ngIf="tipoPeticion === false"><b>Actualiza tus datos</b></h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form name="formulario" [formGroup]="admForm"><br/>
+
+            <div class="row">
+              <div class="col col-md-2">
+                <label>Correo:</label>
+              </div>
+              <div class="col">
+                <input type="email" formControlName="cor" [(ngModel)]="adm.cor" class="form-control form-control-sm" placeholder="Ingresa el correo del administrador (ejemplo@gmail.com).">
+              </div>
+            </div><br/>
+            <div class="row">
+              <div class="col col-md-3">
+                <label>Contraseña:</label>
+              </div>
+              <div class="col col-md-8">
+                <input type="text" formControlName="con" [(ngModel)]="adm.con" name="contra" class="form-control form-control-sm" placeholder="Ingresa la contraseña del administrador.">
+              </div>
+            </div>
+
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-danger" data-toggle="modal" data-dismiss="modal" href="#ventanaElimAdm" *ngIf="!tipoPeticion">Eliminar</button>
+          <button type="button" class="btn btn-primary" (click)="guardarAdm()" [disabled]="!admForm.valid">Guardar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!--Ventana emergente para eliminar un admin-->
+  <div class="modal fade" tabindex="-1" role="dialog" id="ventanaElimAdm">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title"><b>¿Seguro deseas eliminar tu cuenta?</b></h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+
+          <div class="row">
+            <div class="col col-md-3">
+              <label>Contraseña:</label>
+            </div>
+            <div class="col col-md-8">
+              <input type="text" id="contraAdm" name="contra" class="form-control form-control-sm" placeholder="Ingresa la contraseña para eliminar tu cuenta.">
+            </div>
+          </div>
+
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary" data-dismiss="modal" (click)="eliminarAdm()" [disabled]="!admForm.valid">Aceptar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="my-container">
+  <ng-template #customLoadingTemplate>
+  </ng-template>
+  <ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '3px' }" [template]="customLoadingTemplate"></ngx-loading>
+</div>

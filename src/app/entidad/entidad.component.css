@@ -1,0 +1,21 @@
+.ng-valid:not(form)  {
+    border: 1px solid #42A948; /* green */
+}
+
+.ng-invalid:not(form)  {
+    border: 1px solid #a94442; /* red */
+}
+.subir{
+    padding: 6px 10px;
+    background: #00aa0e;
+    color:#fff;
+    border-radius: 5px;
+}
+.subir:hover{
+    color:#fff;
+    background: #71a900;
+}
+#x{
+    padding: 1px 10px;
+}
+

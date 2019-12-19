@@ -1,0 +1,706 @@
+<!--Menu de navegacion de la stratup-->
+<div *ngIf="desabilitar && (entity == 'startup')" >
+  <nav class="navbar navbar-dark p-3 bg-dark text-white">
+    <div class="container">
+        <div class="navbar-brand">¡Convocatoria {{nombreConvocatoria}} !</div>
+      <ul class="nav justify-content-end">
+        <li class="nav-item">
+          <a class="nav-link navbar-brand btn btn-dark" routerLink="../../principalStartup/startup">Home</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link navbar-brand btn btn-dark" routerLink="../../infoEntidad/startup">Entidades</a>
+        </li>
+        <div class="btn-group" role="group">
+          <button id="btnGroupDrop1" type="button" class="nav-link navbar-brand btn btn-dark dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Productos
+          </button>
+          <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
+            <a class="dropdown-item text-dark" routerLink="../../infoProductos/startup">Productos Registrados</a>
+            <a class="dropdown-item text-dark" (click)="editarInfoP()">Agregar Producto</a>
+          </div>
+        </div>
+        <li class="nav-item">
+          <a class="nav-link navbar-brand btn btn-dark" routerLink="../../startup/{{nombreStartup}}">Perfil</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link navbar-brand btn btn-dark" (click)="cerrarSesion()">Cerrar sesion</a>
+        </li>
+      </ul>
+    </div>
+  </nav>
+</div>
+
+<!--Menu de navegacion de la entidad-->
+<div *ngIf="desabilitar === false || (desabilitar && (entity == 'entidad'))">
+  <nav class="navbar navbar-dark p-3 bg-dark text-white">
+    <div class="container">
+      <div class="navbar-brand" *ngIf="nombreConvocatoria === 'new'">¡Registra tu Convocatoria!</div>
+      <div class="navbar-brand" *ngIf="nombreConvocatoria !== 'new'">¡Actualiza los datos!</div>
+      <ul class="nav justify-content-end">
+        <li class="nav-item">
+          <a class="nav-link navbar-brand btn btn-dark text-white" routerLink="../../principalEntidad/entidad">Home</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link navbar-brand btn btn-dark text-white" routerLink="../../infoStartup/entidad">Startups</a>
+        </li>
+        <div class="btn-group" role="group">
+          <button id="btnGroupDrop1" type="button" class="nav-link navbar-brand btn btn-dark dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Convocatorias
+          </button>
+          <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
+            <a class="dropdown-item text-dark" routerLink="../../infoConvocatorias/entidad">Convocatorias Registradas</a>
+            <a class="dropdown-item text-dark" (click)="editarInfoC()">Agregar Convocatoria</a>
+          </div>
+        </div>
+        <li class="nav-item">
+          <a class="nav-link navbar-brand btn btn-dark text-white" (click)="editarInfoE()">Perfil</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link navbar-brand btn btn-dark text-white" (click)="cerrarSesion()">Cerrar sesion</a>
+        </li>
+      </ul>
+    </div>
+  </nav>
+</div>
+
+
+<div *ngIf="desabilitar && (entity == 'adm')">
+    <!--Menu de navegacion del admin-->
+    <nav class="navbar navbar-dark p-3 bg-dark text-white">
+        <div class="container">
+            <div class="navbar-brand">{{nombreConvocatoria}}</div>
+            <ul class="nav justify-content-end">
+
+                <div class="btn-group" role="group">
+                    <button id="btnGroupDrop3" type="button" class="nav-link navbar-brand btn btn-dark dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Consultar
+                    </button>
+                    <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
+                        <a class="dropdown-item text-dark" routerLink="../../infoStartup/adm">Startups</a>
+                        <a class="dropdown-item text-dark" routerLink="../../infoEntidad/adm">Entidades</a>
+                        <a class="dropdown-item text-dark" routerLink="../../infoProductos/adm">Productos</a>
+                        <a class="dropdown-item text-dark" routerLink="../../infoConvocatorias/adm">Convocatorias</a>
+                    </div>
+                </div>
+
+                <div class="btn-group" role="group">
+                    <button id="btnGroupDrop2" type="button" class="nav-link navbar-brand btn btn-dark dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Administrador
+                    </button>
+                    <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
+                        <a class="dropdown-item text-dark" data-toggle="modal" id="agg" (click)="ventana()">Agregar</a>
+                        <a class="dropdown-item text-dark" data-toggle="modal" id="upd" (click)="ventana1()">Perfil</a>
+                    </div>
+                </div>
+
+                <li class="nav-item">
+                    <a class="nav-link navbar-brand btn btn-dark" (click)="cerrarSesion()">Cerrar sesion</a>
+                </li>
+
+            </ul>
+        </div>
+    </nav>
+</div>
+
+
+<!--Barra de progreso de la convocatoria-->
+<div class="container" *ngIf="desabilitar === false">
+  <div class="justify-content-md-center">
+    <section>
+      <div class="container text-left bg-light text-dark border border-info col-md-11" style=" border-radius: 5px;">
+        <div class="row" id="contenedor">
+          <div class="col col-md-1 font-italic">
+            <label><b>Progreso</b></label>
+          </div>
+          <div class="col pt-sm-2">
+            <div class="progress text-center">
+              <div id="progresoCon" class="progress-bar progress-bar-striped {{numeroLlenosLetraCon}} animacion" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+</div>
+
+<!--Formulario de la convocatoria-->
+<div class="container">
+  <div class="justify-content-md-center">
+    <section>
+      <div class="container text-right bg-light text-dark border border-info col-md-11" style=" border-radius: 5px; background-color: #f7f7f7;">
+        <form name="formulario" [formGroup]="registerForm"><br/>
+
+          <div class="text-center" *ngIf="!desabilitar">
+            <label for="date" class="subir">
+              <i class="fas fa-cloud-upload-alt"></i>Imagen de Portada
+            </label>
+            <input id="date" (change)="readUrl($event)" type="file" style='display: none;'/>
+            <input formControlName="imagen" [(ngModel)]="convocatoria.imagen"  name="imagen" type="text" *ngIf="false">
+          </div>
+
+          <div class="text-center">
+            <img id="ima" width="239px" height="180px" [src]="url" *ngIf="habilitarImagen" style="border-radius: 5px;"><div *ngIf="habilitarImagen"><br/></div>
+            <button *ngIf="habilitarImagen && !desabilitar" class="btn btn-danger" id="x" (click)="eliminarImagen()">Eliminar</button>
+          </div><br/>
+
+          <div class="row">
+            <div class="col col-md-3">
+              <label><b>Nombre:</b></label>
+            </div>
+            <div class="col" *ngIf="!desabilitar">
+              <input formControlName="nombre" [(ngModel)]="convocatoria.nombre" name="nombre" type="text" class="form-control form-control-sm" placeholder="Ingresa el nombre de la convocatoria." (input)="animarConA()">
+            </div>
+            <div class="col text-left" *ngIf="desabilitar">{{convocatoria.nombre}}</div>
+          </div><br/>
+
+          <div class="row">
+            <div class="col col-md-3">
+              <label><b>Estado:</b></label>
+            </div>
+            <div class="col" *ngIf="!desabilitar">
+              <select formControlName="estado" [(ngModel)]="convocatoria.estado" name="estado" class="form-control form-control-sm" (ngModelChange)="animarConB($event)">
+                <option>Proxima a abrir</option>
+                <option>Abierta</option>
+              </select>
+            </div>
+            <div class="col text-left" *ngIf="desabilitar">{{convocatoria.estado}}</div>
+          </div><br/>
+
+          <!--<div class="row">-->
+            <!--<div class="col col-md-3">-->
+              <!--<label><b>Tiempo restante:</b></label>-->
+            <!--</div>-->
+            <!--<div class="col">-->
+              <!--<input formControlName="tiempoRestante" [(ngModel)]="convocatoria.tiempoRestante" name="tiempoRestante" type="text" class="form-control form-control-sm" placeholder="Ingresa el tiempo restante de la convocatoria." (input)="animarConC()">-->
+            <!--</div>-->
+          <!--</div><br/>-->
+
+          <div class="row">
+            <div class="col col-md-3 pt-sm-2">
+              <label><b>Fecha de Apertura:</b></label>
+            </div>
+            <div class="col" *ngIf="!desabilitar">
+              <input formControlName="apertura" [(ngModel)]="convocatoria.apertura" name="apertura" type="date" class="form-control form-control-sm" placeholder="Ingresa la fecha de apertura de la convocatoria." (input)="animarConC()">
+            </div>
+            <div class="col text-left" *ngIf="desabilitar">{{convocatoria.apertura}}</div>
+          </div><br/>
+
+          <div class="row">
+            <div class="col col-md-3">
+              <label><b>Fecha de Cierre:</b></label>
+            </div>
+            <div class="col" *ngIf="!desabilitar">
+              <input formControlName="cierre" [(ngModel)]="convocatoria.cierre" name="cierre" type="date" class="form-control form-control-sm" placeholder="Ingresa la fecha de cierre de la convocatoria." (input)="animarConD()">
+            </div>
+            <div class="col text-left" *ngIf="desabilitar">{{convocatoria.cierre}}</div>
+          </div><br/>
+
+          <div class="row">
+            <div class="col col-md-3">
+              <label><b>Proposito:</b></label>
+            </div>
+            <div class="col" *ngIf="!desabilitar">
+              <div class="input-group">
+                <textarea formControlName="proposito" [(ngModel)]="convocatoria.proposito" name="proposito" type="text" class="form-control form-control-sm" placeholder="Ingresa el proposito de la convocatoria." (input)="animarConE()"></textarea>
+              </div><br/>
+            </div>
+            <div class="col text-left" *ngIf="desabilitar">{{convocatoria.proposito}}</div>
+          </div><br/>
+
+          <div class="row">
+            <div class="col col-md-3">
+              <label><b>Dirigido a:</b></label><br/>
+            </div>
+            <div class="col" *ngIf="!desabilitar">
+              <input formControlName="dirigido" [(ngModel)]="convocatoria.dirigido" name="dirigido" type="text" class="form-control form-control-sm" placeholder="Ingresa a quien es dirigida esta convocatoria." (input)="animarConF()">
+            </div>
+            <div class="col text-left" *ngIf="desabilitar">{{convocatoria.dirigido}}</div>
+          </div><br/>
+
+          <div class="row">
+            <div class="col col-md-3">
+              <label><b>Nivel de Crecimiento del Negocio:</b></label>
+            </div>
+            <div class="col" *ngIf="!desabilitar">
+              <select formControlName="nivel" [(ngModel)]="convocatoria.nivel" name="nivel" class="form-control form-control-sm" (ngModelChange)="animarConG($event)">
+                <option>Ideación de negocio</option>
+                <option>Concepción de negocio</option>
+                <option>Empoderamiento</option>
+                <option>Validacion de negocio</option>
+                <option>Escalabilidad de negocio</option>
+                <option>Consolidación de negocio</option>
+              </select>
+            </div>
+            <div class="col text-left pt-sm-2" *ngIf="desabilitar">{{convocatoria.nivel}}</div>
+          </div><br/>
+
+          <div class="row">
+            <div class="col col-md-3">
+              <label><b>Recursos Asignados:</b></label><br/>
+            </div>
+            <div class="col" *ngIf="!desabilitar">
+              <input formControlName="recursos" [(ngModel)]="convocatoria.recursos" name="recursos" type="text" class="form-control form-control-sm" placeholder="Ingresa los recursos asignados para la convocatoria." (input)="animarConH()">
+            </div>
+            <div class="col text-left" *ngIf="desabilitar">{{convocatoria.recursos}}</div>
+          </div><br/>
+
+          <div class="row">
+            <div class="col col-md-3">
+              <label><b>Beneficions:</b></label>
+            </div>
+            <div class="col" *ngIf="!desabilitar">
+              <div class="input-group">
+                <textarea formControlName="beneficios" [(ngModel)]="convocatoria.beneficios" name="beneficios" type="text" class="form-control form-control-sm" placeholder="Ingresa el beneficio de la convocatoria." (input)="animarConI()"></textarea>
+              </div><br/>
+            </div>
+            <div class="col text-left" *ngIf="desabilitar">{{convocatoria.beneficios}}</div>
+          </div><br/>
+
+          <div class="row">
+            <div class="col col-md-3">
+              <label><b>Descripción del Proceso:</b></label>
+            </div>
+            <div class="col" *ngIf="!desabilitar">
+              <input formControlName="descripcionProceso" [(ngModel)]="convocatoria.descripcionProceso" name="descripcionProceso" type="text" class="form-control form-control-sm" placeholder="Ingresa la descripción del proceso de la convocatoria." (input)="animarConK()">
+            </div>
+            <div class="col text-left" *ngIf="desabilitar">{{convocatoria.descripcionProceso}}</div>
+          </div><br/><hr><br/>
+
+          <h5 class="text-left font-italic" style="color: mediumblue"><b>Comparte tu convocatoria</b></h5>
+          <hr>
+
+          <div class="row">
+            <div class="col col-md-3">
+              <label><b>Facebook:</b></label>
+            </div>
+            <div class="col" *ngIf="!desabilitar">
+              <input formControlName="facebookC" [(ngModel)]="convocatoria.facebookC" name="facebookC" type="text" class="form-control form-control-sm" placeholder="Ingresa el facebook de la convocatoria." (input)="animarConL()">
+            </div>
+            <div class="col text-left" *ngIf="desabilitar">{{convocatoria.facebookC}}</div>
+          </div><br/>
+
+          <div class="row">
+            <div class="col col-md-3">
+              <label class="text-center"><b>Linkedln:</b></label><br/>
+            </div>
+            <div class="col" *ngIf="!desabilitar">
+              <input formControlName="linkedlnC" [(ngModel)]="convocatoria.linkedlnC" name="linkedlnC" type="text" class="form-control form-control-sm" placeholder="Ingresa el linkedln de la convocatoria." (input)="animarConM()">
+            </div>
+            <div class="col text-left" *ngIf="desabilitar">{{convocatoria.linkedlnC}}</div>
+          </div><br/>
+
+          <div class="row">
+            <div class="col col-md-3">
+              <label class="text-center"><b>Twitter:</b></label>
+            </div>
+            <div class="col" *ngIf="!desabilitar">
+              <input formControlName="twitterC" [(ngModel)]="convocatoria.twitterC" name="twitterC" type="text" class="form-control form-control-sm" placeholder="Ingresa el twitter de la convocatoria." (input)="animarConN()">
+            </div>
+            <div class="col text-left" *ngIf="desabilitar">{{convocatoria.twitterC}}</div>
+          </div><br/>
+
+          <div class="row">
+            <div class="col col-md-3">
+              <label class="text-center"><b>Whatsapp:</b></label>
+            </div>
+            <div class="col" *ngIf="!desabilitar">
+              <input formControlName="whatsappC" [(ngModel)]="convocatoria.whatsappC" name="whatsappC" type="text" class="form-control form-control-sm" placeholder="Ingresa el whatsapp de la convocatoria." (input)="animarConO()">
+            </div>
+            <div class="col text-left" *ngIf="desabilitar">{{convocatoria.whatsappC}}</div>
+          </div><br/>
+
+          <div class="row">
+            <div class="col col-md-3">
+              <label class="text-center"><b>Instagram:</b></label>
+            </div>
+            <div class="col" *ngIf="!desabilitar">
+              <input formControlName="instagramC" [(ngModel)]="convocatoria.instagramC" name="instagramC" type="text" class="form-control form-control-sm" placeholder="Ingresa el instagram de la convocatoria." (input)="animarConP()">
+            </div>
+            <div class="col text-left" *ngIf="desabilitar">{{convocatoria.instagramC}}</div>
+          </div><br/><hr><br/>
+
+          <h5 class="text-left font-italic" style="color: mediumblue"><b>Documentos del proceso</b></h5>
+          <hr>
+
+            <div class="row">
+                <div class="col col-md-3">
+                    <label><b>Terminos de referencia:</b></label>
+                </div>
+                <div class="col text-left" *ngIf="!desabilitar">
+                    <input formControlName="terminos" [(ngModel)]="convocatoria.terminos" name="terminos" type="file" style="border-color: #f7f7f7;">
+                </div>
+                <div class="col text-left" *ngIf="desabilitar">{{convocatoria.terminos}}</div>
+            </div><br/>
+
+            <div class="row">
+                <div class="col col-md-3">
+                    <label><b>Respuestas a preguntas frecuentes:</b></label>
+                </div>
+                <div class="col text-left pt-sm-2" *ngIf="!desabilitar">
+                    <input formControlName="respuestas" [(ngModel)]="convocatoria.respuestas" name="respuestas" type="file" style="border-color: #f7f7f7;">
+                </div>
+                <div class="col text-left" *ngIf="desabilitar">{{convocatoria.respuestas}}</div>
+            </div><br/>
+
+            <div class="row">
+                <div class="col col-md-3">
+                    <label><b>Anexos:</b></label>
+                </div>
+                <div class="col text-left" *ngIf="!desabilitar">
+                    <input formControlName="anexos" [(ngModel)]="convocatoria.anexos" name="anexos" type="file" style="border-color: #f7f7f7;">
+                </div>
+                <div class="col text-left" *ngIf="desabilitar">{{convocatoria.anexos}}</div>
+            </div><br/>
+
+            <div class="row">
+                <div class="col col-md-3">
+                    <label><b>Otros documentos:</b></label>
+                </div>
+                <div class="col text-left" *ngIf="!desabilitar">
+                    <input formControlName="otrosDocumentos" [(ngModel)]="convocatoria.otrosDocumentos" name="otrosDocumentos" type="file" style="border-color: #f7f7f7;">
+                </div>
+                <div class="col text-left" *ngIf="desabilitar">{{convocatoria.otrosDocumentos}}</div>
+            </div><br/>
+
+          <hr>
+
+          <div class="row">
+            <div class="col col-md-3">
+              <label><b>Dirección Web Oficial:</b></label>
+            </div>
+            <div class="col" *ngIf="!desabilitar">
+              <input formControlName="webOficial" [(ngModel)]="convocatoria.webOficial" name="webOficial" type="text" class="form-control form-control-sm" placeholder="Ingresa la reccion web oficial de la convocatoria." (input)="animarConQ()">
+            </div>
+            <div class="col text-left" *ngIf="desabilitar">{{convocatoria.webOficial}}</div>
+          </div><br/>
+
+          <div class="row">
+            <div class="col col-md-3">
+              <label class="text-center"><b>Correo Electronico Oficial:</b></label><br/>
+            </div>
+            <div class="col" *ngIf="!desabilitar">
+              <input formControlName="correoOficial" [(ngModel)]="convocatoria.correoOficial" name="correoOficial" type="text" class="form-control form-control-sm" placeholder="Ingresa el correo oficial de la convocatoria." (input)="animarConR()">
+            </div>
+            <div class="col text-left" *ngIf="desabilitar">{{convocatoria.correoOficial}}</div>
+          </div><br/>
+
+          <div class="row">
+            <div class="col col-md-3">
+              <label class="text-center"><b>Numero de Contacto:</b></label>
+            </div>
+            <div class="col" *ngIf="!desabilitar">
+              <input formControlName="numero" [(ngModel)]="convocatoria.numero" name="numero" type="text" class="form-control form-control-sm" placeholder="Ingresa el numero de contacto de la convocatoria." (input)="animarConS()">
+            </div>
+            <div class="col text-left" *ngIf="desabilitar">{{convocatoria.numero}}</div>
+          </div><br/><hr/>
+
+          <input formControlName="cantidadAplica" [(ngModel)]="convocatoria.cantidadAplica" name="cantidadAplica" *ngIf="false">
+          <input formControlName="cantidadPuedenAplicar" [(ngModel)]="convocatoria.cantidadPuedenAplicar" name="cantidadPuedenAplicar" *ngIf="false">
+
+          <div *ngIf="false">
+            <input formControlName="requisitos" class="form-control form-control-sm" [(ngModel)]="convocatoria.requisitos" name="requisitos" type="text">
+          </div>
+
+          <div class="row" *ngIf="desabilitar">
+            <div class="col col-md-2">
+              <label class="text-rigth"><b>Pertenece a:</b></label>
+            </div>
+            <div class="col" *ngIf="false">
+              <input formControlName="entidadCon" class="form-control form-control-sm" [(ngModel)]="convocatoria.entidadCon" type="text">
+            </div>
+            <div class="col text-left">{{convocatoria.entidadCon}}</div>
+          </div><br/>
+
+          <div class="col text-center">
+            <a href="#ventanaReq" class="btn" data-toggle="modal" id="aBoton">Requisitos de la convocatoria</a><br/><br/>
+            <button *ngIf="desabilitar === false" [disabled]="!registerForm.valid || desabilitar || !reqForm.valid" class="btn btn-success" (click)="aceptar()" type="submit">Aceptar</button>
+          </div><br/><br/>
+
+        </form>
+      </div>
+    </section>
+  </div>
+</div>
+
+<!--Requisitos de la convocatoria-->
+
+<!--Ventana emergente para seleccionar los requisitos-->
+<div class="modal fade" tabindex="-1" role="dialog" id="ventanaReq">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h5 class="modal-title"><b>¿Que información debe tener registrada una startup para aplicar a esta convocatoria?</b></h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <section>
+          <!--Formulario de los requisitos-->
+          <form name="formulario" [formGroup]="reqForm">
+
+            <div *ngIf="!mostrarSig">
+
+                <div class="text-center"><label>Cantidad minima de empleados:</label></div>
+
+                <div class="row text-center">
+                    <div class="col">
+                        <input formControlName="empNom" style="border-radius: 3px" [(ngModel)]="req.empNom" name="empNom" type="text" [disableControl]="desabilitar" placeholder="Nomina.">
+                        <div *ngIf="!empNom.invalid==false && !empNom.errors.required==true">Solo Numeros</div>
+                    </div>
+                    <div class="col">
+                        <input formControlName="empPre" style="border-radius: 3px" [(ngModel)]="req.empPre" name="empPre" type="text" [disableControl]="desabilitar" placeholder="Prestación.">
+                        <div *ngIf="!empPre.invalid==false && !empPre.errors.required==true">Solo Numeros</div>
+                    </div>
+                </div><br/><hr>
+
+                <div class="text-center" *ngIf="!desabilitar"><label><b>Si seleccionas alguno de estos puntos la startup debe encontrarse en el punto de equilibrio.</b></label></div>
+                <div class="text-center" *ngIf="desabilitar"><label><b>Requisitos si la startup se encuentra en el punto de equilibrio.</b></label></div>
+
+                <div class="row custom-checkbox text-center">
+                    <div class="col">
+                        <label><input formControlName="perCon" [(ngModel)]="req.perCon" name="perCon" type="checkbox" [disableControl]="desabilitar"> Persona de contacto.</label>
+                    </div>
+                    <div class="col">
+                        <label><input formControlName="corCon" [(ngModel)]="req.corCon" name="corCon" type="checkbox" [disableControl]="desabilitar"> Correo de contacto.</label>
+                    </div>
+                    <div class="col">
+                        <label><input formControlName="telCon" [(ngModel)]="req.telCon" name="telCon" type="checkbox" [disableControl]="desabilitar"> Telefono de contacto.</label>
+                    </div>
+                </div>
+
+                <div class="row custom-checkbox" style="margin-left: 10%;">
+                    <div class="col col-md-4">
+                        <label><input formControlName="est" [(ngModel)]="req.est" name="est" type="checkbox" [disableControl]="desabilitar"> Estrategia de cumplimiento.</label>
+                    </div>
+                    <div class="col text-center">
+                        <label><input formControlName="tieMet" [(ngModel)]="req.tieMet" name="tieMet" type="checkbox" [disableControl]="desabilitar"> Tiempo de meta.</label>
+                    </div>
+                </div><hr>
+
+                <div class="text-center" *ngIf="!desabilitar"><label><b>Si seleccionas alguno de estos puntos la startup debe tener un perfil dedicado a encontrar la oportunidad de negocio.</b></label></div>
+                <div class="text-center" *ngIf="desabilitar"><label><b>Requisitos si la startup debe tiene un perfil dedicado a encontrar la oportunidad de negocio.</b></label></div>
+
+                <div class="row custom-checkbox text-center">
+                    <div class="col">
+                        <label><input formControlName="nomEnc" [(ngModel)]="req.nomEnc" name="nomEnc" type="checkbox" [disableControl]="desabilitar"> Nombre del encargado.</label>
+                    </div><br/>
+                    <div class="col">
+                        <label><input formControlName="corEnc" [(ngModel)]="req.corEnc" name="corEnc" type="checkbox" [disableControl]="desabilitar"> Correo del encargado.</label>
+                    </div><br/>
+                    <div class="col">
+                        <label><input formControlName="telEnc" [(ngModel)]="req.telEnc" name="telEnc" type="checkbox" [disableControl]="desabilitar"> Telefono del encargado.</label>
+                    </div><br/>
+                </div><br/>
+
+            </div>
+            <!--Segunda parte de requisitos-->
+            <div *ngIf="mostrarSig">
+
+                <div class="text-center"><label><b>Modelo de Negocio.</b></label></div>
+
+                <div class="row text-center">
+                    <div class="col">
+                        <label>Clientes</label>
+                    </div>
+                    <div class="col">
+                        <label>Usuarios</label>
+                    </div>
+                </div>
+
+                <div class="row custom-checkbox text-center">
+                    <div class="col">
+                        <label><input formControlName="segMerCli" [(ngModel)]="req.segMerCli" name="segMerCli" type="checkbox" [disableControl]="desabilitar"> Segmento de mercado.</label>
+                    </div>
+                    <div class="col">
+                        <label><input formControlName="segMerUsu" [(ngModel)]="req.segMerUsu" name="segMerUsu" type="checkbox" [disableControl]="desabilitar"> Segmento de mercado.</label>
+                    </div>
+                </div>
+
+                <div class="row custom-checkbox text-center">
+                    <div class="col">
+                        <label><input formControlName="proValCli" [(ngModel)]="req.proValCli" name="proValCli" type="checkbox" [disableControl]="desabilitar"> Propuesta de valor.</label>
+                    </div>
+                    <div class="col">
+                        <label><input formControlName="proValUsu" [(ngModel)]="req.proValUsu" name="proValUsu" type="checkbox" [disableControl]="desabilitar"> Propuesta de valor.</label>
+                    </div>
+                </div>
+
+                <div class="row custom-checkbox text-center">
+                    <div class="col">
+                        <label><input formControlName="canInfCli" [(ngModel)]="req.canInfCli" name="canInfCli" type="checkbox" [disableControl]="desabilitar"> Canales de información.</label>
+                    </div>
+                    <div class="col">
+                        <label><input formControlName="canInfUsu" [(ngModel)]="req.canInfUsu" name="canInfUsu" type="checkbox" [disableControl]="desabilitar"> Canales de información.</label>
+                    </div>
+                </div>
+
+                <div class="row custom-checkbox text-center">
+                    <div class="col">
+                        <label><input formControlName="canEvaCli" [(ngModel)]="req.canEvaCli" name="canEvaCli" type="checkbox" [disableControl]="desabilitar">  Canales de evaluación.</label>
+                    </div>
+                    <div class="col">
+                        <label><input formControlName="canEvaUsu" [(ngModel)]="req.canEvaUsu" name="canEvaUsu" type="checkbox" [disableControl]="desabilitar">  Canales de evaluación.</label>
+                    </div>
+                </div>
+
+                <div class="row custom-checkbox text-center">
+                    <div class="col">
+                        <label><input formControlName="canVenCli" [(ngModel)]="req.canVenCli" name="canVenCli" type="checkbox" [disableControl]="desabilitar">  Canales de venta.</label>
+                    </div>
+                    <div class="col">
+                        <label><input formControlName="canVenUsu" [(ngModel)]="req.canVenUsu" name="canVenUsu" type="checkbox" [disableControl]="desabilitar">  Canales de venta.</label>
+                    </div>
+                </div>
+
+                <div class="row custom-checkbox text-center">
+                    <div class="col">
+                        <label><input formControlName="canEntCli" [(ngModel)]="req.canEntCli" name="canEntCli" type="checkbox" [disableControl]="desabilitar">  Canales de entrega.</label>
+                    </div>
+                    <div class="col">
+                        <label><input formControlName="canEntUsu" [(ngModel)]="req.canEntUsu" name="canEntUsu" type="checkbox" [disableControl]="desabilitar"> Canales de entrega.</label>
+                    </div>
+                </div>
+
+                <div class="row custom-checkbox text-center">
+                    <div class="col">
+                        <label><input formControlName="canPosCli" [(ngModel)]="req.canPosCli" name="canPosCli" type="checkbox" [disableControl]="desabilitar"> Canales Pos-venta.</label>
+                    </div>
+                    <div class="col">
+                        <label><input formControlName="canPosUsu" [(ngModel)]="req.canPosUsu" name="canPosUsu" type="checkbox" [disableControl]="desabilitar"> Canales Pos-venta.</label>
+                    </div>
+                </div>
+
+                <div class="row custom-checkbox text-center">
+                    <div class="col">
+                        <label><input formControlName="relCli" [(ngModel)]="req.relCli" name="relCli" type="checkbox" [disableControl]="desabilitar"> Relacionamiento.</label>
+                    </div>
+                    <div class="col">
+                        <label><input formControlName="relUsu" [(ngModel)]="req.relUsu" name="relUsu" type="checkbox" [disableControl]="desabilitar"> Relacionamiento.</label>
+                    </div>
+                </div><hr>
+
+                <div class="text-center"><label><b>Proceso de Negocio.</b></label></div>
+
+                <div class="row custom-checkbox text-center">
+                    <div class="col">
+                        <label><input formControlName="nomPro" [(ngModel)]="req.nomPro" name="nomPro" type="checkbox" [disableControl]="desabilitar"> Nombre del proceso.</label>
+                    </div>
+                    <div class="col">
+                        <label><input formControlName="objPro" [(ngModel)]="req.objPro" name="objPro" type="checkbox" [disableControl]="desabilitar"> Objetivos del proceso.</label>
+                    </div>
+                    <div class="col">
+                        <label><input formControlName="desPro" [(ngModel)]="req.desPro" name="desPro" type="checkbox" [disableControl]="desabilitar"> Descripcion del proceso.</label>
+                    </div>
+                </div>
+
+                <div class="row custom-checkbox text-center">
+                    <div class="col">
+                        <label><input formControlName="metProCli" [(ngModel)]="req.metProCli" name="metProCli" type="checkbox" [disableControl]="desabilitar"> Meta del proceso segun las empresas.</label>
+                    </div>
+                    <div class="col">
+                        <label><input formControlName="metProUsu" [(ngModel)]="req.metProUsu" name="metProUsu" type="checkbox" [disableControl]="desabilitar"> Meta del proceso segun los usuarios.</label>
+                    </div>
+                </div><br/>
+            </div>
+
+          </form>
+        </section>
+      </div>
+      <div class="modal-footer">
+        <a *ngIf="mostrarSig === true" id="vol" class="btn" (click)="volModal()" type="button" data-dismiss="modal">Volver</a>
+        <a *ngIf="reqForm.valid && mostrarSig === false" id="sig" class="btn" (click)="sigModal()" type="button">Siguiente</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!--Formulario de la relacion entre startup y convocatoria-->
+<form [formGroup]="aplicarForm" *ngIf="false">
+  <input formControlName="convocatoriaApli" [(ngModel)]="convocatoria_startup.convocatoriaApli" type="text">
+  <input formControlName="startupApli" [(ngModel)]="convocatoria_startup.startupApli" type="text">
+  <input formControlName="aplico" [(ngModel)]="convocatoria_startup.aplico" type="text">
+  <input formControlName="porcentaje" [(ngModel)]="convocatoria_startup.porcentaje" type="text">
+</form>
+
+
+
+<div *ngIf="desabilitar">
+    <!--Ventana emergente para crear o actualizar un admin-->
+    <div class="modal fade" tabindex="-1" role="dialog" id="ventana1">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" *ngIf="tipoPeticion === true"><b>Nuevo administrador</b></h5>
+                    <h5 class="modal-title" *ngIf="tipoPeticion === false"><b>Actualiza tus datos</b></h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form name="formulario" [formGroup]="admForm"><br/>
+
+                        <div class="row">
+                            <div class="col col-md-2">
+                                <label>Correo:</label>
+                            </div>
+                            <div class="col">
+                                <input type="email" formControlName="cor" [(ngModel)]="adm.cor" class="form-control form-control-sm" placeholder="Ingresa el correo del administrador (ejemplo@gmail.com).">
+                            </div>
+                        </div><br/>
+                        <div class="row">
+                            <div class="col col-md-3">
+                                <label>Contraseña:</label>
+                            </div>
+                            <div class="col col-md-8">
+                                <input type="text" formControlName="con" [(ngModel)]="adm.con" name="contra" class="form-control form-control-sm" placeholder="Ingresa la contraseña del administrador.">
+                            </div>
+                        </div>
+
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-danger" data-toggle="modal" data-dismiss="modal" href="#ventanaElimAdm" *ngIf="!tipoPeticion">Eliminar</button>
+                    <button type="button" class="btn btn-primary" (click)="guardarAdm()" [disabled]="!admForm.valid">Guardar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--Ventana emergente para eliminar un admin-->
+    <div class="modal fade" tabindex="-1" role="dialog" id="ventanaElimAdm">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title"><b>¿Seguro deseas eliminar tu cuenta?</b></h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+
+                    <div class="row">
+                        <div class="col col-md-3">
+                            <label>Contraseña:</label>
+                        </div>
+                        <div class="col col-md-8">
+                            <input type="text" id="contraAdm" name="contra" class="form-control form-control-sm" placeholder="Ingresa la contraseña para eliminar tu cuenta.">
+                        </div>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" data-dismiss="modal" (click)="eliminarAdm()" [disabled]="!admForm.valid">Aceptar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="my-container">
+  <ng-template #customLoadingTemplate>
+  </ng-template>
+  <ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '3px' }" [template]="customLoadingTemplate"></ngx-loading>
+</div>

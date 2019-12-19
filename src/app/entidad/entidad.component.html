@@ -1,0 +1,400 @@
+<!--Menu de navegacion de la entidad-->
+<div *ngIf="nombreEntidad!=='new' && desabilitar===false">
+  <nav class="navbar  navbar-dark p-3 bg-dark text-white">
+    <div class="container">
+      <div class="navbar-brand">¡Actualiza Tus Datos!</div>
+      <ul class="nav justify-content-end">
+        <li class="nav-item">
+          <a class="nav-link navbar-brand btn btn-dark" routerLink="../../principalEntidad/entidad">Home</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link navbar-brand btn btn-dark" routerLink="../../infoStartup/entidad">Startups</a>
+        </li>
+        <div class="btn-group" role="group">
+          <button id="btnGroupDrop1" type="button" class="nav-link navbar-brand btn btn-dark dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Convocatorias
+          </button>
+          <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
+            <a class="dropdown-item text-dark" routerLink="../../infoConvocatorias/entidad">Convocatorias Registradas</a>
+            <a class="dropdown-item text-dark" (click)="editarInfoC()">Agregar Convocatoria</a>
+          </div>
+        </div>
+        <li class="nav-item">
+          <a class="nav-link navbar-brand btn btn-dark" (click)="editarInfoE()">Perfil</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link navbar-brand btn btn-dark" (click)="cerrarSesion()">Cerrar sesion</a>
+        </li>
+      </ul>
+    </div>
+  </nav>
+</div>
+
+<div *ngIf="desabilitar">
+  <!--Menu de navegacion del admin-->
+  <nav class="navbar navbar-dark p-3 bg-dark text-white">
+    <div class="container">
+      <div class="navbar-brand">{{nombreEntidad}}</div>
+      <ul class="nav justify-content-end">
+
+        <div class="btn-group" role="group">
+          <button id="btnGroupDrop3" type="button" class="nav-link navbar-brand btn btn-dark dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Consultar
+          </button>
+          <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
+            <a class="dropdown-item text-dark" routerLink="../../infoStartup/adm">Startups</a>
+            <a class="dropdown-item text-dark" routerLink="../../infoEntidad/adm">Entidades</a>
+            <a class="dropdown-item text-dark" routerLink="../../infoProductos/adm">Productos</a>
+            <a class="dropdown-item text-dark" routerLink="../../infoConvocatorias/adm">Convocatorias</a>
+          </div>
+        </div>
+
+        <div class="btn-group" role="group">
+          <button id="btnGroupDrop2" type="button" class="nav-link navbar-brand btn btn-dark dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Administrador
+          </button>
+          <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
+            <a class="dropdown-item text-dark" data-toggle="modal" id="agg" (click)="ventana()">Agregar</a>
+            <a class="dropdown-item text-dark" data-toggle="modal" id="upd" (click)="ventana1()">Perfil</a>
+          </div>
+        </div>
+
+        <li class="nav-item">
+          <a class="nav-link navbar-brand btn btn-dark" (click)="cerrarSesion()">Cerrar sesion</a>
+        </li>
+
+      </ul>
+    </div>
+  </nav>
+</div>
+
+<!--Barra de progreso de la entidad-->
+<div class="container" *ngIf="desabilitar===false">
+  <div class="justify-content-md-center">
+    <section>
+      <div class="container text-dark border border-info text-left col-md-11" style=" border-radius: 5px;">
+        <div class="row" id="contenedor">
+          <div class="col col-md-1 font-italic">
+            <label><b>Progreso</b></label>
+          </div>
+          <div class="col pt-sm-2">
+            <div class="progress text-center">
+              <div id="progresoE" class="progress-bar progress-bar-striped {{numeroLlenosLetraE}} animacion" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+</div>
+
+<!--Titulo-->
+<div class="container">
+  <div class="justify-content-md-center">
+    <section>
+      <div class="container text-dark border border-info text-right col-md-11" style=" border-radius: 5px; background-color: dodgerblue">
+        <div class="row p-3"  style=" border-radius: 5px; color: black">
+          <div class="col">
+            <div class="text-center font-italic"><b>Información de tu Entidad</b></div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+</div>
+
+<!--Formulario de la entidad-->
+<div class="container">
+  <div class="justify-content-md-center">
+    <section>
+      <div class="container text-dark border border-info text-right col-md-11" style=" border-radius: 5px; background-color: #f7f7f7;" id="color1">
+        <form [formGroup]="registerForm"><br/>
+
+          <div *ngIf="!desabilitar" class="text-center">
+            <label for="date" class="subir">
+              <i class="fas fa-cloud-upload-alt"></i>Foto de Perfil
+            </label>
+            <input id="date" (change)="readUrl($event)" type="file" style='display: none;'/>
+            <input formControlName="foto" [(ngModel)]="entidad.foto"  name="foto" type="text" *ngIf="false">
+          </div>
+
+          <div class="text-center">
+            <img id="ima" width="200px" height="200px" [src]="url" *ngIf="habilitarFoto" style="border-radius: 5px;"><div *ngIf="habilitarFoto"><br/></div>
+            <button class="btn btn-danger" id="x" (click)="eliminarFoto()" *ngIf="habilitarFoto && !desabilitar">Eliminar</button>
+          </div><br/>
+
+          <div class="row">
+            <div class="col col-md-3">
+              <label><b>Nombre:</b></label>
+            </div>
+            <div class="col" *ngIf="!desabilitar">
+              <input formControlName="nombre" [(ngModel)]="entidad.nombre" name="nombre" type="text" class="form-control form-control-sm" placeholder="Ingresa el nombre de tu entidad." (input)="animarEA()">
+            </div>
+            <div class="col text-left" *ngIf="desabilitar">{{entidad.nombre}}.</div>
+          </div><div *ngIf="!desabilitar"><br/></div>
+
+          <div class="row" *ngIf="!desabilitar">
+            <div class="col col-md-3">
+              <label><b>Contraseña:</b></label>
+            </div>
+            <div class="col">
+              <input formControlName="contrasena" [(ngModel)]="entidad.contrasena" name="contrasena" type="password" class="form-control form-control-sm" placeholder="Ingresa la contraseña de tu cuenta." (input)="animarEB()">
+              <div *ngIf="!contrasena.invalid==false && !contrasena.errors.required==true">Minimo seis caracteres</div>
+            </div>
+          </div><br/>
+
+          <div class="row">
+            <div class="col col-md-3">
+              <label><b>Tipo de Entidad:</b></label>
+            </div>
+            <div class="col" *ngIf="!desabilitar">
+              <select formControlName="tipo" [(ngModel)]="entidad.tipo" name="tipo" class="form-control form-control-sm" (ngModelChange)="animarEC($event)">
+                <option>Publica</option>
+                <option>Privada</option>
+                <option>Mixta</option>
+              </select>
+            </div>
+            <div class="col text-left" *ngIf="desabilitar">{{entidad.tipo}}.</div>
+          </div><div *ngIf="!desabilitar"><br/></div>
+
+          <div class="row">
+            <div class="col pt-sm-3 col-md-3">
+              <label class="text-center"><b>Descripción:</b></label>
+            </div>
+            <div class="col" *ngIf="!desabilitar">
+              <div class="input-group">
+                <textarea formControlName="descripcion" [(ngModel)]="entidad.descripcion" name="descripcion" type="text" class="form-control form-control-sm" placeholder="Ingresa la descripción de tu entidad." (input)="animarED()"></textarea>
+              </div>
+              <div *ngIf="!descripcion.invalid==false && !descripcion.errors.required==true">Maximo mil caracteres</div>
+            </div>
+            <div class="col pt-sm-3 text-left" *ngIf="desabilitar">{{entidad.descripcion}}.</div>
+          </div><br/>
+
+          <div class="row">
+            <div class="col col-md-3">
+              <label><b>Telefono:</b></label>
+            </div>
+            <div class="col" *ngIf="!desabilitar">
+              <input formControlName="telefono" [(ngModel)]="entidad.telefono" name="telefono" type="text" class="form-control form-control-sm" placeholder="Ingresa el telefono de tu entidad." (input)="animarEE()">
+            </div>
+            <div class="col text-left" *ngIf="desabilitar">{{entidad.telefono}}.</div>
+          </div><br/>
+
+          <div class="row">
+            <div class="col col-md-3">
+              <label><b>Dirección Web:</b></label>
+            </div>
+            <div class="col" *ngIf="!desabilitar">
+              <input formControlName="direccionWeb" [(ngModel)]="entidad.direccionWeb" name="direccionWeb" type="text" class="form-control form-control-sm" placeholder="Ingresa la dirección de tu entidad." (input)="animarEF()">
+            </div>
+            <div class="col text-left" *ngIf="desabilitar">{{entidad.direccionWeb}}.</div>
+          </div><br/>
+
+          <div class="row">
+            <div class="col col-md-3">
+              <label><b>Correo Electrónico:</b></label>
+            </div>
+            <div class="col" *ngIf="!desabilitar">
+              <input formControlName="correo" [(ngModel)]="entidad.correo" name="correo" type="text" class="form-control form-control-sm" placeholder="Ingresa el correo de la entidad." (input)="animarEG()">
+            </div>
+            <div class="col text-left" *ngIf="desabilitar">{{entidad.correo}}.</div>
+          </div><br/>
+
+          <div class="row">
+            <div class="col col-md-3">
+              <label><b>Facebook:</b></label>
+            </div>
+            <div class="col" *ngIf="!desabilitar">
+              <input formControlName="facebook" [(ngModel)]="entidad.facebook" name="facebook" type="text" class="form-control form-control-sm" placeholder="Ingresa el facebook de tu entidad." (input)="animarEH()">
+            </div>
+            <div class="col text-left" *ngIf="desabilitar">{{entidad.facebook}}.</div>
+          </div><br/>
+
+          <div class="row">
+            <div class="col col-md-3">
+              <label class="text-center"><b>Linkedln:</b></label><br/>
+            </div>
+            <div class="col" *ngIf="!desabilitar">
+              <input formControlName="linkedln"[(ngModel)]="entidad.linkedln" name="linkedln" type="text" class="form-control form-control-sm" placeholder="Ingresa el linkedln de tu entidad." (input)="animarEI()">
+            </div>
+            <div class="col text-left" *ngIf="desabilitar">{{entidad.linkedln}}.</div>
+          </div><br/>
+
+          <div class="row">
+            <div class="col col-md-3">
+              <label class="text-center"><b>Twitter:</b></label>
+            </div>
+            <div class="col" *ngIf="!desabilitar">
+              <input formControlName="twitter" [(ngModel)]="entidad.twitter" name="twitter" type="text" class="form-control form-control-sm" placeholder="Ingresa el twitter de tu entidad." (input)="animarEJ()">
+            </div>
+            <div class="col text-left" *ngIf="desabilitar">{{entidad.twitter}}.</div>
+          </div><br/>
+
+          <div class="row">
+            <div class="col col-md-3">
+              <label class="text-center"><b>Instagram:</b></label>
+            </div>
+            <div class="col" *ngIf="!desabilitar">
+              <input formControlName="instagram" [(ngModel)]="entidad.instagram" name="instagram" type="text" class="form-control form-control-sm" placeholder="Ingresa el instagram de tu entidad." (input)="animarEK()">
+            </div>
+            <div class="col text-left" *ngIf="desabilitar">{{entidad.instagram}}.</div>
+          </div><br/>
+
+          <div class="row">
+            <div class="col col-md-3">
+              <label class="text-center"><b>Dirección:</b></label>
+            </div>
+            <div class="col" *ngIf="!desabilitar">
+              <input formControlName="direccion" [(ngModel)]="entidad.direccion" name="direccion" type="text" class="form-control form-control-sm" placeholder="Ingresa la dirección de tu entidad." (input)="animarEL()">
+            </div>
+            <div class="col text-left" *ngIf="desabilitar">{{entidad.direccion}}.</div>
+          </div><br/>
+
+          <div class="row">
+            <div class="col col-md-3">
+              <label class="text-center"><b>Ciudad:</b></label>
+            </div>
+            <div class="col" *ngIf="!desabilitar">
+              <input formControlName="ciudad" [(ngModel)]="entidad.ciudad" name="ciudad" type="text" class="form-control form-control-sm" placeholder="Ingresa la ciudad donde está tu entidad." (input)="animarEM()">
+            </div>
+            <div class="col text-left" *ngIf="desabilitar">{{entidad.ciudad}}.</div>
+          </div><br/>
+
+          <div class="row">
+            <div class="col col-md-3">
+              <label class="text-center"><b>Departamento:</b></label><br/>
+            </div>
+            <div class="col" *ngIf="!desabilitar">
+              <input formControlName="departamento" [(ngModel)]="entidad.departamento" name="departamento" type="text" class="form-control form-control-sm" placeholder="Ingresa el departamento donde está tu entidad." (input)="animarEN()">
+            </div>
+            <div class="col text-left" *ngIf="desabilitar">{{entidad.departamento}}.</div>
+          </div><br/>
+
+          <div class="text-center">
+            <button [disabled]="!registerForm.valid || this.desabilitar" class="btn btn-success" type="submit" (click)="aceptar()">Aceptar</button>
+          </div><br/><br/>
+        </form>
+      </div>
+    </section>
+  </div>
+</div>
+
+<!--Boton para llamar a la ventana emergente-->
+<div class="text-center" *ngIf="!desabilitar && verBotonEliminar">
+  <br/>
+  <a href="#ventanaElim" class="btn btn-danger" (click)="llamarVentana()" id="boton1" data-toggle="modal">Eliminar Cuenta</a>
+  <br/>
+  <br/>
+  <!--Ventana emergente para eliminar la cuenta-->
+  <div class="modal fade" tabindex="-1" role="dialog" id="ventanaElim">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title"><b>¿Seguro que deseas eliminar tu cuenta?</b></h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+
+          <div class="row">
+            <div class="col col-md-3">
+              <label>Contraseña:</label>
+            </div>
+            <div class="col">
+              <input type="password" id="contraE" name="contraE" class="form-control form-control-sm" placeholder="Ingresa la contraseña para eliminar tu cuenta.">
+            </div>
+          </div>
+
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary" data-dismiss="modal" (click)="eliminarEntidad()">Aceptar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+<div *ngIf="desabilitar">
+  <!--Ventana emergente para crear o actualizar un admin-->
+  <div class="modal fade" tabindex="-1" role="dialog" id="ventana1">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" *ngIf="tipoPeticion === true"><b>Nuevo administrador</b></h5>
+          <h5 class="modal-title" *ngIf="tipoPeticion === false"><b>Actualiza tus datos</b></h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form name="formulario" [formGroup]="admForm"><br/>
+
+            <div class="row">
+              <div class="col col-md-2">
+                <label>Correo:</label>
+              </div>
+              <div class="col">
+                <input type="email" formControlName="cor" [(ngModel)]="adm.cor" class="form-control form-control-sm" placeholder="Ingresa el correo del administrador (ejemplo@gmail.com).">
+              </div>
+            </div><br/>
+            <div class="row">
+              <div class="col col-md-3">
+                <label>Contraseña:</label>
+              </div>
+              <div class="col col-md-8">
+                <input type="text" formControlName="con" [(ngModel)]="adm.con" name="contra" class="form-control form-control-sm" placeholder="Ingresa la contraseña del administrador.">
+              </div>
+            </div>
+
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-danger" data-toggle="modal" data-dismiss="modal" href="#ventanaElimAdm" *ngIf="!tipoPeticion">Eliminar</button>
+          <button type="button" class="btn btn-primary" (click)="guardarAdm()" [disabled]="!admForm.valid">Guardar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!--Ventana emergente para eliminar un admin-->
+  <div class="modal fade" tabindex="-1" role="dialog" id="ventanaElimAdm">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title"><b>¿Seguro deseas eliminar tu cuenta?</b></h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+
+          <div class="row">
+            <div class="col col-md-3">
+              <label>Contraseña:</label>
+            </div>
+            <div class="col col-md-8">
+              <input type="text" id="contraAdm" name="contra" class="form-control form-control-sm" placeholder="Ingresa la contraseña para eliminar tu cuenta.">
+            </div>
+          </div>
+
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary" data-dismiss="modal" (click)="eliminarAdm()" [disabled]="!admForm.valid">Aceptar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+<div class="my-container">
+  <ng-template #customLoadingTemplate>
+  </ng-template>
+  <ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '3px' }" [template]="customLoadingTemplate"></ngx-loading>
+</div>

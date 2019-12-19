@@ -1,0 +1,43 @@
+<body>
+<nav class="navbar-dark p-4 bg-dark text-white">
+  <div class="container text-center">
+    <div class="navbar-brand"><b>¡Ingresa tu Cuenta!</b></div>
+  </div>
+</nav>
+
+<div class="container">
+  <div class="row justify-content-md-center">
+    <div class="col-md-5">
+      <section>
+        <!--formulario de registro-->
+        <div class="container text-center bg-light text-dark border border-info" style=" border-radius: 5px;">
+          <form><br/><br/><br/>
+            <div class="form-group">
+              <label id="tit"><b>{{titulo}}</b></label>
+              <input [(ngModel)]="model.nombre" id="nombre" name="nombre" type="text" class="form-control text-center"  required>
+            </div>
+            <div class="form-group">
+              <label for="pass" id="contra"><b>Contraseña</b></label>
+              <input [(ngModel)]="model.pass" name="pass" type="password" class="form-control text-center" id="pass" required>
+            </div>
+            <div class="form-group" *ngIf="reg === true">
+              <button (click)="registro()" id="regis" class="btn bg-light text-center">¡Registrate!</button>
+            </div>
+            <div *ngIf="reg === false">
+              <br/><br/>
+            </div>
+            <button (click)="login()" class="btn btn-info">Login</button>
+          </form><br/><br/><br/>
+        </div>
+      </section>
+    </div>
+  </div>
+</div>
+
+</body>
+<div class="my-container">
+  <ng-template #customLoadingTemplate>
+  </ng-template>
+  <ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '3px' }" [template]="customLoadingTemplate"></ngx-loading>
+</div>
+

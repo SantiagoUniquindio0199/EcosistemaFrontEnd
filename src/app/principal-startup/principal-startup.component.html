@@ -1,0 +1,94 @@
+<body>
+
+<!--Menu de navegacion de la startup-->
+<nav class="navbar navbar-dark p-3 mb-2 bg-dark text-white" *ngIf="!desabilitarMenu">
+  <div class="container">
+    <div class="navbar-brand">¡Bienvenido!</div>
+    <ul class="nav justify-content-end">
+      <li class="nav-item">
+        <a class="nav-link navbar-brand btn btn-dark" routerLink="../../principalStartup/startup">Home</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link navbar-brand btn btn-dark" routerLink="../../infoEntidad/{{emisorPS}}">Entidades</a>
+      </li>
+      <div class="btn-group" role="group">
+        <button type="button" class="nav-link navbar-brand btn btn-dark dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          Productos
+        </button>
+        <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
+            <a class="dropdown-item text-dark" routerLink="../../infoProductos/startup">Productos Registrados</a>
+            <a class="dropdown-item text-dark" (click)="editarInfoP()">Agregar Producto</a>
+        </div>
+      </div>
+      <li class="nav-item">
+        <a class="nav-link navbar-brand btn btn-dark" (click)="editarInfo()">Perfil</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link navbar-brand btn btn-dark" (click)="cerrarSesion()">Cerrar sesion</a>
+      </li>
+    </ul>
+  </div>
+</nav>
+
+<!--Menu de navegacion de la entidad-->
+<nav class="navbar navbar-dark p-3 mb-2 bg-dark text-white" *ngIf="desabilitarMenu">
+  <div class="container">
+    <div class="navbar-brand">¡Bienvenido!</div>
+    <ul class="nav justify-content-end">
+      <li class="nav-item">
+        <a class="nav-link navbar-brand btn btn-dark" routerLink="../../principalEntidad/entidad">Home</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link navbar-brand btn btn-dark" routerLink="../../infoStartup/entidad">Startups</a>
+      </li>
+      <div class="btn-group" role="group">
+        <button type="button" class="nav-link navbar-brand btn btn-dark dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          Convocatorias
+        </button>
+        <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
+          <a class="dropdown-item text-dark" routerLink="../../infoConvocatorias/entidad">Convocatorias Registradas</a>
+          <a class="dropdown-item text-dark" (click)="editarInfoC()">Agregar Convocatoria</a>
+        </div>
+      </div>
+      <li class="nav-item">
+        <a class="nav-link navbar-brand btn btn-dark" (click)="editarInfoE()">Perfil</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link navbar-brand btn btn-dark" (click)="cerrarSesion()">Cerrar sesion</a>
+      </li>
+    </ul>
+  </div>
+</nav><br/>
+
+<div *ngIf="convocatorias.length === 0" class="text-center text-secondary" style="font-size: 20px;">
+  <br/><br/><br/><br/><br/>
+  <div><b>No hay convocatorias registradas a las que pueda aplicar.</b></div>
+  <br/><br/><br/><br/><br/><br/>
+</div>
+
+<!--Tarjetas para mostrar las convocatorias-->
+<div>
+  <div class="card-columns" style="margin: 20px">
+    <div class="card" *ngFor="let result of convocatorias; let i = index;">
+      <img class="card-img-top" width="239px" height="180px" src="{{result.imagen}}" alt="Card image cap">
+      <div class="card-body">
+        <h5 class="card-title text-center">{{result.nombre}}</h5>
+        <p class="card-text">{{result.proposito}}</p>
+      </div>
+      <div class="card-footer text-center" *ngIf="emisorPS === 'startup'">
+        <div *ngIf="porcentajeFaltante[i] > 0" class="text-center">Te hace falta {{porcentajeFaltante[i]}}% de tu información para aplicar.</div> <div *ngIf="porcentajeFaltante[i] > 0"><br/></div>
+        <div *ngIf="porcentajeFaltante[i] === 0 && estadoAplicar[i] === 'true'" class="text-center">Ya has aplicado a esta convocatoria.</div><div *ngIf="porcentajeFaltante[i] === 0 && estadoAplicar[i] === 'true'" ><br/></div>
+        <a class="btn btn-info" (click)="verInfoConv(i)">Ver a Detalle</a>
+        <button *ngIf="porcentajeFaltante[i] === 0 && estadoAplicar[i] === 'false'" class="btn btn-success text-center text-dark" (click)="aplicar(i)">Aplicar</button>
+      </div>
+    </div>
+  </div>
+</div>
+<div *ngIf="desabilitarMenu"><br/><br/></div>
+
+</body>
+<div class="my-container">
+  <ng-template #customLoadingTemplate>
+  </ng-template>
+  <ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '3px' }" [template]="customLoadingTemplate"></ngx-loading>
+</div>
